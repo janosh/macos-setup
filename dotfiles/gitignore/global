@@ -1,0 +1,7 @@
+# General
+.DS_Store
+
+# VS Code files
+# prefix "!" negates any matching file excluded by a previous pattern
+# hence will be included again, e.g. !.vscode/settings.json
+.vscode/*
