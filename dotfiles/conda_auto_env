@@ -5,11 +5,13 @@
 #   - env(ironment).y(a)ml
 #   - requirements.y(a)ml
 # if env doesn't exist yet, create it; deactivate env when exciting folder
-# installation: copy precmd() to .bashrc or save the whole script as
+# installation: copy chpwd() to .bashrc or save the whole script as
 # file and source it in .bashrc, e.g. by placing it in /usr/local/bin
 # or by symlinking conda_auto_env there
 
-precmd() {
+# chpwd is a zsh hook function that is executed whenever the current working
+# directory is changed (http://zsh.sourceforge.net/Doc/Release/Functions.html).
+chpwd() {
   FILE="$(find -E . -maxdepth 1 -regex '.*(env(ironment)?|requirements)\.ya?ml' -print -quit)"
   if [[ -e $FILE ]]; then
     ENV=$(sed -n 's/name: //p' $FILE)
@@ -33,3 +35,6 @@ precmd() {
     conda deactivate
   fi
 }
+
+# execute chpwd on shell init
+chpwd
