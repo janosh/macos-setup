@@ -11,7 +11,10 @@ configure_git() {
   git config --global user.email "${github_email}"
   git config --global github.user "${github_username}"
   git config --global credential.helper osxkeychain
+  # make VS Code the default editor (e.g. for rebase sessions)
   git config --global core.editor "code --wait"
+  git config --global rebase.autoStash true
+  git config --global rebase.autoSquash true
 }
 
 copy_app_icons() {
