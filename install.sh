@@ -7,7 +7,7 @@ install() {
 
   clear
 
-  initial_setup
+  caffeinate & # prevent computer from going to sleep during setup
   ask_details
   sync_icloud
   update_system
@@ -29,7 +29,7 @@ install() {
   cleanup_brew
   cleanup_error_log
   move_manual_action_files
-  killall caffeinate # computer can go back to sleep
+  killall caffeinate # allow computer to go back to sleep
   final_message
 }
 

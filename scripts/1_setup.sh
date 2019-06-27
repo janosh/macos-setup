@@ -6,13 +6,6 @@ renew_sudo() { # helper function used whenever the following command needs `sudo
   sudo --stdin --validate <<< "${sudo_password}" 2> /dev/null
 }
 
-initial_setup() {
-  export PATH="/usr/local/bin:${PATH}"
-
-  trap 'exit 0' SIGINT # exit cleanly if aborted with ⌃C
-  caffeinate & # prevent computer from going to sleep
-}
-
 ask_details() {
   # ask for the administrator password upfront, for commands that require `sudo`
   clear
