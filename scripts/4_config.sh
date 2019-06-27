@@ -13,8 +13,15 @@ configure_git() {
   git config --global credential.helper osxkeychain
   # make VS Code the default editor (e.g. for rebase sessions)
   git config --global core.editor "code --wait"
+  # https://git-scm.com/docs/git-config#Documentation/git-config.txt-rebaseautoStash
   git config --global rebase.autoStash true
+  # Automatically move fixup commits to the correct line during interactive rebase.
   git config --global rebase.autoSquash true
+  # run `flake8 --install-hook git` to add flake8 pre-commit
+  # hook to a project (will be added to .git/hooks/pre-commit)
+  # https://flake8.pycqa.org/en/latest/user/using-hooks.html
+  # the line below prevents committing files with issues
+  git config --bool flake8.strict true
 }
 
 copy_app_icons() {
