@@ -21,7 +21,7 @@ chpwd() {
       # if env activation unsuccessful, create new env from file
       if [ $? -ne 0 ]; then
         echo "Conda environment '$ENV' doesn't exist. Creating it now."
-        conda env create -q
+        conda env create -f $FILE
         conda activate $ENV
       fi
       CONDA_ENV_ROOT="$(pwd)"
