@@ -1,42 +1,42 @@
 #!/bin/bash
 
-# helper functions
+# Helper functions.
 trap 'exit 0' SIGINT # exit cleanly if aborted with ⌃C
 
 info() {
   echo "$(tput setaf 2)•$(tput sgr0) ${1}"
 }
 
-request() { # output a message and open an app
+request() { # Output a message and open an app.
   local message="${1}"
   local app="${2}"
   shift 2
 
   echo "$(tput setaf 5)•$(tput sgr0) ${message}"
-  open -Wa "${app}" --args "$@" # don't continue until app closes
+  open -Wa "${app}" --args "$@" # Don't continue until app closes.
 }
 
-request_preferences() { # 'request' for System Preferences
+request_preferences() { # 'request' for System Preferences.
   request "${1}" 'System Preferences'
 }
 
-preferences_pane() { # open 'System Preferences' is specified pane
+preferences_pane() { # Open 'System Preferences' in specified pane.
   osascript -e "tell application \"System Preferences\"
     reveal pane \"${1}\"
     activate
   end tell" &> /dev/null
 }
 
-preferences_pane_anchor() { # open 'System Preferences' is specified pane and tab
+preferences_pane_anchor() { # Open 'System Preferences' in specified pane and tab.
   osascript -e "tell application \"System Preferences\"
     reveal anchor \"${1}\" of pane \"${2}\"
     activate
   end tell" &> /dev/null
 }
 
-# intial message
 clear
 
+# Initial message when starting the script.
 echo "After running the main install script, this script will help configure the rest of macOS. It is divided in two parts:
 
   $(tput setaf 2)•$(tput sgr0) Commands that will change settings without needing intervention.
@@ -49,7 +49,7 @@ echo "After running the main install script, this script will help configure the
   After the changes are done, close the app and the script will continue.
 " | sed -E 's/ {2}//'
 
-# ask for 'sudo' authentication
+# Ask for 'sudo' authentication.
 if sudo --non-interactive true 2> /dev/null; then
   read -s -n0 -p "$(tput bold)Some commands require 'sudo', but it seems you have already authenticated. When you’re ready to continue, press ↵.$(tput sgr0)"
   echo
@@ -58,8 +58,8 @@ else
   sudo --validate
 fi
 
-# first part
-# more options on http://mths.be/macos
+# --- First part ---
+# More options on http://mths.be/macos.
 
 info 'Expand save panel by default.'
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
@@ -74,7 +74,7 @@ info 'Disable the “Are you sure you want to open this application?” dialog'
 defaults write com.apple.LaunchServices LSQuarantine -bool false
 
 info 'Enable full keyboard access for all controls.'
-# (e.g. enable Tab in modal dialogs)
+# In particular, enable Tab in modal dialogs.
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 info 'Trackpad: enable tap to click for this user and for the login screen'
@@ -112,8 +112,8 @@ osascript -e 'tell application "System Events" to tell appearance preferences to
 info 'Set Dock size and screen edge.'
 osascript -e 'tell application "System Events" to tell dock preferences to set properties to {dock size:0.17, screen edge:left}'
 
-# second part
-# find values for System Preferences by opening the desired pane and running the following AppleScript:
+# --- Second part ---
+# Find values for System Preferences by opening the desired pane and running the following AppleScript:
 # tell application "System Preferences" to return anchors of current pane
 
 echo

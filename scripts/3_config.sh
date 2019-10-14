@@ -1,27 +1,35 @@
-configure_zsh() { # make zsh default shell
+configure_zsh() {
+  # Make zsh the default shell.
   sudo -s 'echo /usr/local/bin/zsh >> /etc/shells' && chsh -s /usr/local/bin/zsh
   ln -s ../dotfiles/.zshrc ~
 }
 
 configure_git() {
-  # remove old Apple pre-installed git
+  # Remove outdated Apple-pre-installed git (thereby
+  # using the current brew-installed git instead).
   sudo rm /usr/bin/git
 
+  # Configure git username.
   git config --global user.name "${git_name}"
+  # Authenticate with GitHub.
   git config --global user.email "${github_email}"
   git config --global github.user "${github_username}"
   git config --global credential.helper osxkeychain
-  # make VS Code the default editor (e.g. for rebase sessions)
+
+  # Use VSCode as git editor (e.g. for interactive rebase sessions).
   git config --global core.editor "code --wait"
+  # Automatically create temporary stash entry before rebase begins, and reapply afterwards.
   # https://git-scm.com/docs/git-config#Documentation/git-config.txt-rebaseautoStash
   git config --global rebase.autoStash true
   # Automatically move fixup commits to the correct line during interactive rebase.
   git config --global rebase.autoSquash true
-  # run `flake8 --install-hook git` to add flake8 pre-commit
-  # hook to a project (will be added to .git/hooks/pre-commit)
+
+  # Run `flake8 --install-hook git` to add flake8 pre-commit
+  # hook to a project (will be added to .git/hooks/pre-commit).
   # https://flake8.pycqa.org/en/latest/user/using-hooks.html
-  # the line below prevents committing files with issues
+  # The line below aborts commits with linter issues.
   git config --bool flake8.strict true
+
 }
 
 copy_app_icons() {
@@ -44,8 +52,8 @@ copy_app_icons() {
 }
 
 configure_conda() {
-  # to enable conda for the current user, add ENABLE_CONDA to bashrc or similar
-  # the following grep checks if that line already exists before adding it
+  # To enable conda for the current user, add ENABLE_CONDA to bashrc or similar.
+  # The following grep checks if that line already exists before adding it.
   ENABLE_CONDA=". /usr/local/miniconda3/etc/profile.d/conda.sh"
   FILE=~/.zprofile
   grep -qxF -- "$ENABLE_CONDA" "$FILE" || echo "$ENABLE_CONDA" >> "$FILE"

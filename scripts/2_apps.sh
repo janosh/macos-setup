@@ -1,15 +1,21 @@
+install_brew() {
+  renew_sudo
+  /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)" < /dev/null
+}
+
 install_brew_clis() {
   brew install zsh --without-etcdir
-  # install zsh_plugins
+  # Install zsh_plugins.
   brew install
     zsh-autosuggestions \
     zsh-completions \
     zsh-history-substring-search \
     zsh-syntax-highlighting \
 
-  # install yarn package manager
+  # Install yarn package manager.
   brew install yarn --without-node
 
+  # Install other CLIs.
   brew install
     rsync \
     ffmpeg \
@@ -20,6 +26,9 @@ install_brew_clis() {
     trash \
     rename \
     exiftool \
+    aspell \
+    exiftool \
+    node \
 }
 
 install_brew_casks() {
