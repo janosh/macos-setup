@@ -30,6 +30,9 @@ configure_git() {
   # The line below aborts commits with linter issues.
   git config --bool flake8.strict true
 
+  # Configure global hooks directory.
+  # https://stackoverflow.com/a/37293198
+  git config --global core.hooksPath $(pwd)/dotfiles/gitHooks
 }
 
 copy_app_icons() {
