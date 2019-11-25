@@ -32,7 +32,7 @@ install_brew_clis() {
 }
 
 install_brew_casks() {
-  renew_sudo # to make the Caskroom on first install
+  renew_sudo # To make the Caskroom on first install.
   brew cask install \
     iterm2 \
     visual-studio-code \
@@ -59,6 +59,16 @@ install_brew_casks() {
     transmit \
     daisydisk \
     keka \
+    # QuickLook plugins
+    provisionql \
+    webpquicklook \
+    qlvideo \
+    qlimagesize \
+    qlmarkdown \
+    qlcolorcode \
+    qlstephen \
+    quicklook-json \
+    \
     # slack \
     # 1password \
     # moneymoney \
@@ -95,9 +105,9 @@ install_mas_apps() {
 }
 
 install_other_apps() {
-  # install JS CLIs
+  # Install JS CLIs.
   yarn global add gatsby-cli gatsby-dev-cli netlify-cli jest-cli contentful-cli eslint
 
-  # oh my zsh
+  # Install Oh My Zsh.
   sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 }
