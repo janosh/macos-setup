@@ -33,6 +33,9 @@ configure_git() {
   # Configure global hooks directory.
   # https://stackoverflow.com/a/37293198
   git config --global core.hooksPath $(pwd)/dotfiles/gitHooks
+
+  # https://stackoverflow.com/a/3745250
+  git config --global push.followTags true
 }
 
 copy_app_icons() {
