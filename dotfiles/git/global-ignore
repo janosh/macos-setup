@@ -1,2 +1,5 @@
+# A prefix of "!" (e.g. !.vscode/settings.json) negates any
+# matching file excluded by a previous pattern.
+
 .DS_Store
 
