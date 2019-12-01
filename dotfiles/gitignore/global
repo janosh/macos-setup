@@ -1,7 +1,8 @@
+# A prefix of "!" (e.g. !.vscode/settings.json) negates any
+# matching file excluded by a previous pattern.
+
 # General
 .DS_Store
 
-# VS Code files
-# A prefix of "!" (e.g. !.vscode/settings.json) negates any
-# matching file excluded by a previous pattern.
+# VS Code
 .vscode/*

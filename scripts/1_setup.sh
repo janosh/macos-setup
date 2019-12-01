@@ -1,42 +1,35 @@
+#!/bin/zsh
+
 bold_echo() { # Helper function for bold text.
   echo "$(tput bold)${1}$(tput sgr0)"
 }
 
-renew_sudo() { # Helper function used whenever the following command needs `sudo`.
+renew_sudo() { # Helper function used whenever the ensuing command needs `sudo`.
   sudo --stdin --validate <<< "${sudo_password}" 2> /dev/null
 }
 
 ask_details() {
   # Ask for the administrator password upfront (to run commands that require `sudo`).
-  clear
   bold_echo 'Provide sudo password (will not be echoed).'
   until sudo --non-interactive true 2> /dev/null; do # If password is wrong, keep asking.
-    read -s -p 'Password: ' sudo_password
+    read -s 'sudo_password?Password: '
     echo
-    sudo --stdin --validate <<< "${sudo_password}" 2> /dev/null
+    renew_sudo
   done
 
-  clear
-  bold_echo 'Your Mac App Store details to install apps:'
-  read -p 'Mac App Store email: ' mas_email
-  read -s -p 'Mac App Store password (will not be echoed): ' mas_password
-
-  clear
+  echo
   bold_echo 'Git user info:'
-  read -p 'First and last names: ' git_name
-  read -p 'Github username: ' github_username
-  read -p 'Github email: ' github_email
+  read 'git_name?First and last names: '
+  read 'github_username?Github username: '
+  read 'github_email?Github email: '
 
-  clear
-  bold_echo 'Some contact information to be set in the lock screen:'
-  read -p 'Email address: ' email
-  read -p 'Telephone number: ' telephone
-  sudo --stdin defaults write /Library/Preferences/com.apple.loginwindow \
-    LoginwindowText "This machine belongs to Janosh Riebesell. \
-    If lost and found, contact ${email} or ${telephone}" \
+  echo
+  bold_echo 'Contact information to display on lock screen if device is lost:'
+  echo 'Uses name and email from git user info above.'
+  read 'phone?Phone number: '
+  sudo --stdin defaults write /Library/Preferences/com.apple.loginwindow LoginwindowText \
+    "This machine belongs to ${git_name}. If lost and found, contact ${github_email} or ${phone}" \
     <<< "${sudo_password}" 2> /dev/null
-
-  clear
 }
 
 update_system() {

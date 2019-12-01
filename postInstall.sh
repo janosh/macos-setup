@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Helper functions.
 trap 'exit 0' SIGINT # exit cleanly if aborted with ⌃C

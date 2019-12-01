@@ -1,12 +1,17 @@
+#!/bin/zsh
+
 configure_zsh() {
-  # Make zsh the default shell.
-  sudo -s 'echo /usr/local/bin/zsh >> /etc/shells' && chsh -s /usr/local/bin/zsh
-  ln -s ../dotfiles/.zshrc ~
+  # Link .zshrc from dotfiles to home directory.
+  ln -s "$(pwd)/dotfiles/.zshrc" ~
+
+  # Install Oh My Zsh.
+  sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 }
 
 configure_git() {
-  # Remove outdated Apple-pre-installed git (thereby
-  # using the current brew-installed git instead).
+  # Make root directory user-writeable until restart. Required for next command.
+  sudo mount -uw /
+  # Remove Apple-pre-installed git (ensures newer brew-installed git is used instead).
   sudo rm /usr/bin/git
 
   # Configure git username.
@@ -16,53 +21,42 @@ configure_git() {
   git config --global github.user "${github_username}"
   git config --global credential.helper osxkeychain
 
+  # Setup gobal gitignore file.
+  git config --global core.excludesfile "$(pwd)/dotfiles/gitignore/global"
+
   # Use VSCode as git editor (e.g. for interactive rebase sessions).
   git config --global core.editor "code --wait"
-  # Automatically create temporary stash entry before rebase begins, and reapply afterwards.
+  # Automatically create temporary stash entry before rebase begins. Reapply afterwards.
   # https://git-scm.com/docs/git-config#Documentation/git-config.txt-rebaseautoStash
   git config --global rebase.autoStash true
   # Automatically move fixup commits to the correct line during interactive rebase.
   git config --global rebase.autoSquash true
 
-  # Run `flake8 --install-hook git` to add flake8 pre-commit
-  # hook to a project (will be added to .git/hooks/pre-commit).
-  # https://flake8.pycqa.org/en/latest/user/using-hooks.html
-  # The line below aborts commits with linter issues.
-  git config --bool flake8.strict true
-
-  # Configure global hooks directory.
-  # https://stackoverflow.com/a/37293198
-  git config --global core.hooksPath $(pwd)/dotfiles/gitHooks
-
   # https://stackoverflow.com/a/3745250
   git config --global push.followTags true
 }
 
-copy_app_icons() {
-  cp icons/CoconutBattery.icns /Applications/Utilities/coconutBattery.app/Contents/Resources/AppIcon.icns
-  touch /Applications/Utilities/coconutBattery.app
+custom_app_icons() {
+  typeset -A apps=(
+    Handbrake Handbrake.icns
+    Transmission Transmission.icns
+    Tune•Instructor AppIcon.icns
+    VLC vlc.icns
+    Zotero Zotero.icns
+  )
 
-  cp icons/Handbrake.icns /Applications/Utilities/Handbrake.app/Contents/Resources/Handbrake.icns
-  touch /Applications/Utilities/Handbrake.app
-
-  cp icons/Transmission.icns /Applications/Utilities/Transmission.app/Contents/Resources/Transmission.icns
-  touch /Applications/Utilities/Transmission.app
-
-  cp icons/TuneInstructor.icns /Applications/Utilities/Tune•Instructor.app/Contents/Resources/AppIcon.icns
-  touch /Applications/Utilities/Tune•Instructor.app
-
-  cp icons/VLC.icns /Applications/Utilities/VLC.app/Contents/Resources/vlc.icns
-  touch /Applications/Utilities/VLC.app
-
-  sudo killall Finder && sudo killall Dock
+  for app icon_file_name in "${(kv)apps}"; do
+    cp "appIcons/$app.icns" "/Applications/$app.app/Contents/Resources/$icon_file_name"
+    touch "/Applications/$app.app"
+    # Necessary to avoid the following error after icon change:
+    # "{app} is damaged and can’t be opened. You should move it to the Trash"
+    # See https://apple.stackexchange.com/a/300304.
+    xattr -cr "/Applications/$app.app"
+  done
 }
 
 configure_conda() {
-  # To enable conda for the current user, add ENABLE_CONDA to bashrc or similar.
-  # The following grep checks if that line already exists before adding it.
-  ENABLE_CONDA=". /usr/local/miniconda3/etc/profile.d/conda.sh"
-  FILE=~/.zprofile
-  grep -qxF -- "$ENABLE_CONDA" "$FILE" || echo "$ENABLE_CONDA" >> "$FILE"
+  # Automatically activate a project's conda env when entering its directory.
   ln -s "$(pwd)/dotfiles/conda_auto_env" /usr/local/bin
 }
 
@@ -75,5 +69,6 @@ configure_ssh() {
   # -i '': Edit file in place with no backup.
   sudo sed -i '' '/SendEnv LANG LC_\*/ s/^#*/#/' /etc/ssh/ssh_config
 
-  ln -s ../dotfiles/ssh_config ~/.ssh/config
+  mkdir -p ~/.ssh
+  ln -s "$(pwd)/dotfiles/ssh_config" ~/.ssh/config
 }

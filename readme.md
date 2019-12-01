@@ -2,19 +2,27 @@
 
 ## Purpose
 
-This is a repo of shell scripts and config files that, when executed and copied into their respective destinations, bring a clean install of macOS into a working-ready state.
+This repo contains shell scripts and config files which, when executed and copied into their respective destinations, bring a clean install of macOS into a working-ready state.
 
 Adapted from [Vítor’s dotfiles](https://github.com/vitorgalvao/dotfiles).
 
-## Install everything
+## Usage
 
-```bash
-bash -c "$(curl -fsSL 'https://raw.github.com/janosh/setup/master/install.sh')"
+To run all automatic scripts in this repo:
+
+```sh
+zsh -c "$(curl -fsSL 'https://raw.github.com/janosh/setup/master/install.sh')"
+```
+
+If you've already cloned the repo locally:
+
+```sh
+./install.sh
 ```
 
 ## Organization
 
-The most important files in this repo are:
+The important files in this repo are:
 
 ```text
 .
@@ -23,13 +31,9 @@ The most important files in this repo are:
 └── postInstall.sh
 ```
 
-`./scripts` holds the shell scripts. Containing only functions, none of them will do anything if run on their own. `install.sh` brings them together in an automated fashion, sourcing all functions and running them in sequence.
+`./scripts` holds the shell scripts. Containing only functions, none of them will do anything if run on their own. `install.sh` brings them together by sourcing all functions and running them in sequence.
 
-If you wish to run only parts of the setup process, you need only source the appropriate scripts and run the respective functions.
-
-## License
-
-[MIT](license)
+If you wish to run only parts of the setup process, source the appropriate script(s) and call the respective functions, e.g. `source scripts/2_apps.sh && brew_install`.
 
 ## Other useful commands
 
