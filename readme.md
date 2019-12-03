@@ -1,4 +1,4 @@
-# Setup Automation
+# macOS Setup Automation
 
 ## Purpose
 
@@ -11,13 +11,19 @@ Adapted from [Vítor’s dotfiles](https://github.com/vitorgalvao/dotfiles).
 To run all automatic scripts in this repo:
 
 ```sh
-zsh -c "$(curl -fsSL 'https://raw.github.com/janosh/setup/master/install.sh')"
+zsh -c "$(curl -sSL 'https://raw.github.com/janosh/setup/master/install.sh')"
 ```
 
-If you've already cloned the repo locally:
+Or, if you've already cloned the repo locally, simply run:
 
 ```sh
 ./install.sh
+```
+
+To customize OS settings and complete the setup, run:
+
+```sh
+zsh -c "$(curl -sSL 'https://raw.github.com/janosh/setup/master/postInstall.sh')"
 ```
 
 ## Organization
