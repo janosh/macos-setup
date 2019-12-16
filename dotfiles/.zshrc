@@ -19,7 +19,10 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# User Configuration
+# --- User Configuration ---
+
+# Remember to set iTerm key bindings to "Natural Text Editing"
+# under Settings > Profiles > Keys > Presets > Natural Text Editing.
 
 alias path='echo "${PATH//:/\n}"'
 alias bu='brew upgrade && brew cask upgrade && brew cleanup'
@@ -38,8 +41,5 @@ source /usr/local/share/zsh-history-substring-search/zsh-history-substring-searc
 source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fpath=(/usr/local/share/zsh-completions $fpath)
 
-export TF_CPP_MIN_LOG_LEVEL=2
-
-# Skip forward/back a word with opt-arrow
-bindkey '[C' forward-word
-bindkey '[D' backward-word
+# https://github.com/zsh-users/zsh-autosuggestions/issues/351
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste)
