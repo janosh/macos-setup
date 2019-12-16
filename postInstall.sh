@@ -35,6 +35,11 @@ preferences_pane_anchor() { # Open 'System Preferences' in specified pane and ta
   end tell" &> /dev/null
 }
 
+set_file_association() {
+  defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \
+  "{LSHandlerContentType=${1};LSHandlerRoleAll=${2};}"
+}
+
 # Initial message when starting the script.
 echo "After running the main install script, this script will help configure the rest of macOS. It is divided into two parts:
 
@@ -116,6 +121,15 @@ defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 info 'Use columns view in all Finder windows by default.'
 # Four-letter codes for the other view modes: 'icnv', 'Nlsv', 'Flwv'
 defaults write com.apple.finder FXPreferredViewStyle -string 'clmv'
+
+# Change default file associations (requires restart).
+# See https://apple.stackexchange.com/a/123834.
+set_file_association net.daringfireball.markdown com.microsoft.vscode
+set_file_association public.plain-text com.microsoft.vscode
+set_file_association public.mpeg-4 org.videolan.vlc
+set_file_association public.html com.google.chrome
+# /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework\
+# /Versions/A/Support/lsregister -kill -r -domain local -domain system -domain user
 
 for app in 'Dock' 'Finder'; do
   killall "${app}" &> /dev/null
