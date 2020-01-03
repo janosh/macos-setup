@@ -138,6 +138,16 @@ set_file_association public.html com.google.chrome
 # /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework\
 # /Versions/A/Support/lsregister -kill -r -domain local -domain system -domain user
 
+# Customize VLC settings
+# Ensure the settings file exists (not created on install but on launch)
+# by calling vlc with an invalid value for the interface option.
+# Does nothing except create and populate the file
+# ~/Library/Preferences/org.videolan.vlc/vlcrc
+vlc -I none
+# Enable dark mode and disable icon changes (like Christmas icon).
+sed -i '' -E 's/#?macosx-interfacestyle=0/macosx-interfacestyle=1/' ~/Library/Preferences/org.videolan.vlc/vlcrc
+sed -i '' -E 's/#?macosx-icon-change=1/macosx-icon-change=0/' ~/Library/Preferences/org.videolan.vlc/vlcrc
+
 for app in 'Dock' 'Finder'; do
   killall "${app}" &> /dev/null
 done
