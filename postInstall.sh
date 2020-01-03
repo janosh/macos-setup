@@ -85,8 +85,15 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 info 'Disable Resume system-wide.'
 defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
 
-info 'Disable the “Are you sure you want to open this application?” dialog.'
-defaults write com.apple.LaunchServices LSQuarantine -bool false
+info 'Disable the prompt “Are you sure you want to open this application?”.'
+defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSQuaratine -bool false
+
+info 'Disable the Gatekeeper prompt “{appname} can’t be opened because it is from an unidentified developer”.'
+sudo spctl --master-disable
+
+info 'Prevent Gatekeeper from re-enabling itself after 30 days.'
+# Changes System Preferences > Security & Privacy > General > Allow apps downloaded from.
+sudo defaults write /Library/Preferences/com.apple.security GKAutoRearm -bool false
 
 info 'Prevent Safari from auto-opening "safe" files after download.'
 defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
