@@ -2,7 +2,7 @@
 
 configure_zsh() {
   # Link .zshrc from dotfiles to home directory.
-  ln -s "$(pwd)/dotfiles/.zshrc" ~
+  ln dotfiles/.zshrc ~
 
   # Install Oh My Zsh.
   sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
@@ -21,8 +21,8 @@ configure_git() {
   git config --global github.user "${github_username}"
   git config --global credential.helper osxkeychain
 
-  # Setup gobal gitignore file.
-  git config --global core.excludesfile "$(pwd)/dotfiles/gitignore/global"
+  # Hard-link gobal gitignore file into default location.
+  ln dotfiles/gitignore/global ~/.config/git/ignore
 
   # Use VSCode as git editor (e.g. for interactive rebase sessions).
   git config --global core.editor "code --wait"
@@ -57,7 +57,7 @@ custom_app_icons() {
 
 configure_conda() {
   # Automatically activate a project's conda env when entering its directory.
-  ln -s "$(pwd)/dotfiles/conda_auto_env" /usr/local/bin
+  ln dotfiles/conda_auto_env /usr/local/bin
 }
 
 configure_ssh() {
@@ -70,5 +70,5 @@ configure_ssh() {
   sudo sed -i '' '/SendEnv LANG LC_\*/ s/^#*/#/' /etc/ssh/ssh_config
 
   mkdir -p ~/.ssh
-  ln -s "$(pwd)/dotfiles/ssh_config" ~/.ssh/config
+  ln dotfiles/ssh_config ~/.ssh/config
 }
