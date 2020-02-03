@@ -148,6 +148,12 @@ vlc -I none
 sed -i '' -E 's/#?macosx-interfacestyle=0/macosx-interfacestyle=1/' ~/Library/Preferences/org.videolan.vlc/vlcrc
 sed -i '' -E 's/#?macosx-icon-change=1/macosx-icon-change=0/' ~/Library/Preferences/org.videolan.vlc/vlcrc
 
+# Install iTerm dynamic profile.
+mkdir -p ~/Library/Application\ Support/iTerm2/DynamicProfiles \
+  && ln dotfiles/iterm-profile.json ~/Library/Application\ Support/iTerm2/DynamicProfiles
+# Make custom profile the default.
+defaults write com.googlecode.iterm2 "Default Bookmark Guid" "73964F77-3452-4112-BE05-8A8F1ED9B50D"
+
 for app in 'Dock' 'Finder'; do
   killall "${app}" &> /dev/null
 done

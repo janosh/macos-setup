@@ -1,0 +1,15 @@
+{
+  "Profiles": [
+    {
+      "Name": "Janosh's Profile",
+      "Guid": "73964F77-3452-4112-BE05-8A8F1ED9B50D",
+      "Description": "Janosh's Profile",
+      "Rows": 35,
+      "Columns": 90,
+      "Custom Directory": "Yes",
+      "Working Directory": "/Users/janosh/Repos",
+      "Scrollback Lines": 3000,
+      "Normal Font": "Monaco 16"
+    }
+  ]
+}
