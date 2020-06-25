@@ -1,3 +1,5 @@
+# Used by the brew_install() function.
+
 # CLIs
 # ---
 brew 'git'
@@ -16,6 +18,8 @@ brew 'zsh-autosuggestions'
 brew 'zsh-completions'
 brew 'zsh-history-substring-search'
 brew 'zsh-syntax-highlighting'
+brew 'mas' # required to install Mac App Store apps
+# https://github.com/Homebrew/homebrew-bundle#requirements
 
 # Apps
 # ---
