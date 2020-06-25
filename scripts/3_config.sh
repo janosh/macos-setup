@@ -22,7 +22,7 @@ configure_git() {
   git config --global credential.helper osxkeychain
 
   # Hard-link gobal gitignore file into default location.
-  ln dotfiles/gitignore/global ~/.config/git/ignore
+  ln dotfiles/git/global-ignore ~/.config/git/ignore
 
   # Use VSCode as git editor (e.g. for interactive rebase sessions).
   git config --global core.editor "code --wait"
