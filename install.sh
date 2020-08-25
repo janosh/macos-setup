@@ -15,6 +15,7 @@ install() {
 
   configure_zsh
   configure_git
+  symlink_custom_scripts
   custom_app_icons
   configure_ssh
 

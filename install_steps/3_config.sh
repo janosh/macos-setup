@@ -36,6 +36,11 @@ configure_git() {
   git config --global push.followTags true
 }
 
+symlink_custom_scripts() {
+  # uses symbolic link to be able to resolve local .env file holding iLovePDF API key via os.readlink()
+  ln -s "$(pwd)/scripts/ilove_pdf_compress" /usr/local/bin
+}
+
 custom_app_icons() {
   typeset -A apps=(
     Handbrake Handbrake.icns
