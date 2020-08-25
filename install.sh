@@ -16,7 +16,6 @@ install() {
   configure_zsh
   configure_git
   custom_app_icons
-  configure_conda
   configure_ssh
 
   brew cleanup

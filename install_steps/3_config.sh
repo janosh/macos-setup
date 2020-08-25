@@ -55,11 +55,6 @@ custom_app_icons() {
   done
 }
 
-configure_conda() {
-  # Automatically activate a project's conda env when entering its directory.
-  ln dotfiles/conda_auto_env.sh /usr/local/bin
-}
-
 configure_ssh() {
   renew_sudo
 
