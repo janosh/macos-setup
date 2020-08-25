@@ -22,7 +22,7 @@ configure_git() {
   git config --global credential.helper osxkeychain
 
   # Hard-link gobal gitignore file into default location.
-  ln dotfiles/git/global-ignore ~/.config/git/ignore
+  ln dotfiles/git-global-ignore ~/.config/git/ignore
 
   # Use VSCode as git editor (e.g. for interactive rebase sessions).
   git config --global core.editor "code --wait"
@@ -57,7 +57,7 @@ custom_app_icons() {
 
 configure_conda() {
   # Automatically activate a project's conda env when entering its directory.
-  ln dotfiles/conda_auto_env /usr/local/bin
+  ln dotfiles/conda_auto_env.sh /usr/local/bin
 }
 
 configure_ssh() {

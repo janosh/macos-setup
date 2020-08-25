@@ -1,9 +1,9 @@
 #!/bin/zsh
 
 install() {
-  # Source all shell scripts.
-  for shell_script in scripts/*.sh; do
-    source "${shell_script}"
+  # Source all install scripts.
+  for script in install_steps/*.sh; do
+    source "${script}"
   done
 
   caffeinate & # Prevent computer from going to sleep during setup.
