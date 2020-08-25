@@ -25,10 +25,9 @@ source $ZSH/oh-my-zsh.sh
 # under Settings > Profiles > Keys > Presets > Natural Text Editing.
 
 alias path='echo "${PATH//:/\n}"'
-alias bu='brew upgrade && brew cask upgrade && brew cleanup'
-alias yu='yarn global upgrade --latest && yarn cache clean'
-alias su='sudo sh -c “softwareupdate -ia && reboot”'
-alias hpc='ssh jr769@login-gpu.hpc.cam.ac.uk'
+alias brewup='brew upgrade && brew cask upgrade && brew cleanup'
+alias yarnup='yarn global upgrade --latest && yarn cache clean'
+alias softup='sudo sh -c “softwareupdate -ia && reboot”'
 
 # Makes conda activate <env_name> available in terminal.
 source "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh"
