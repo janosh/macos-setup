@@ -31,9 +31,8 @@ alias su='sudo sh -c “softwareupdate -ia && reboot”'
 alias hpc='ssh jr769@login-gpu.hpc.cam.ac.uk'
 
 # Makes conda activate <env_name> available in terminal.
-# Must appear before `source conda_auto_env`.
 source "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh"
-source conda_auto_env
+conda activate py38
 
 # Source brew-installed zsh plugins.
 source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
