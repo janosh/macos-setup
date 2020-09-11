@@ -34,6 +34,11 @@ configure_git() {
 
   # https://stackoverflow.com/a/3745250
   git config --global push.followTags true
+
+  # How to reconcile divergent branches when pulling. Default is false, i.e. perform a merge.
+  git config --global pull.rebase true
+  # https://stackoverflow.com/a/62653400
+  git config --global pull.ff only # fast-forward only
 }
 
 symlink_custom_scripts() {
