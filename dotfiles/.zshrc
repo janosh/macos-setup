@@ -25,7 +25,7 @@ source $ZSH/oh-my-zsh.sh
 # under Settings > Profiles > Keys > Presets > Natural Text Editing.
 
 alias path='echo "${PATH//:/\n}"'
-alias brewup='brew upgrade && brew cask upgrade && brew cleanup'
+alias brewup='brew upgrade && brew cleanup'
 alias yarnup='yarn global upgrade --latest && yarn cache clean'
 alias softup='sudo sh -c “softwareupdate -ia && reboot”'
 

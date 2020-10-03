@@ -52,5 +52,5 @@ sudo sh -c “softwareupdate -ia && reboot”
 To update all `brew` apps and casks, run
 
 ```sh
-brew upgrade && brew cask upgrade && brew cleanup
+brew upgrade && brew cleanup
 ```
