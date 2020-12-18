@@ -8,6 +8,7 @@ algoliasearch
 altenkirch
 anharmonic
 anharmonicity
+anonymized
 antisymmetry
 argmax
 argmin
@@ -171,6 +172,7 @@ inspectable
 instanceof
 instantsearch
 integrand
+integro
 interlayer
 intermetallics
 interpretability
