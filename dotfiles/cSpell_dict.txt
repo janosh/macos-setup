@@ -32,9 +32,12 @@ Hadamard
 Hypernetworks
 IIFE
 IPCC
+Ising
 Jacobians
 Jang
 Jupyter
+Kitaev
+Kleinicke
 Kosiorek
 Langevin
 Louizos
@@ -54,6 +57,7 @@ Researchgate
 Rhys
 Riebesell's
 SOTA
+Sanderson
 Seff
 Shanno
 Shortname
@@ -80,6 +84,7 @@ algoliasearch
 altenkirch
 anharmonic
 anharmonicity
+anonymized
 antisymmetry
 argmax
 argmin
@@ -244,6 +249,7 @@ inspectable
 instanceof
 instantsearch
 integrand
+integro
 interlayer
 intermetallics
 interpretability

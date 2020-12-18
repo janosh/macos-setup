@@ -147,6 +147,10 @@ vlc -I none
 # Enable dark mode and disable icon changes (like Christmas icon).
 sed -i '' -E 's/#?macosx-interfacestyle=0/macosx-interfacestyle=1/' ~/Library/Preferences/org.videolan.vlc/vlcrc
 sed -i '' -E 's/#?macosx-icon-change=1/macosx-icon-change=0/' ~/Library/Preferences/org.videolan.vlc/vlcrc
+# use sed with double quotes for variable replacement and pipe as separator
+# since variable contains forward slashes (https://askubuntu.com/a/508174)
+sed -i '' -E "s|#?snapshot-path=.*|snapshot-path=$HOME/Desktop/|" ~/Library/Preferences/org.videolan.vlc/vlcrc
+sed -i '' -E 's/#?snapshot-format=.*/snapshot-format=jpg/' ~/Library/Preferences/org.videolan.vlc/vlcrc
 
 # Install iTerm dynamic profile.
 mkdir -p ~/Library/Application\ Support/iTerm2/DynamicProfiles \

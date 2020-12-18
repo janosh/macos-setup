@@ -19,6 +19,7 @@ brew 'zsh-completions'
 brew 'zsh-history-substring-search'
 brew 'zsh-syntax-highlighting'
 brew 'mas' # required to install Mac App Store apps
+brew 'eye-d3' # for editing ID 3 metadata on MP3 files
 # https://github.com/Homebrew/homebrew-bundle#requirements
 
 # Apps
