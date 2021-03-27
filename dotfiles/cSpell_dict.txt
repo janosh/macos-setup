@@ -30,6 +30,7 @@ backpropagation
 backticks
 bandgap
 bandgaps
+bandstructs
 bandstructure
 bandstructures
 bashprofile
@@ -41,6 +42,7 @@ bijections
 bijective
 bijectivity
 bijector
+bijectors
 biogeochemists
 bioinformatics
 bnns
@@ -83,6 +85,7 @@ decorrelate
 decorrelated
 decorrelating
 decorrelation
+denormed
 deps
 descriptor's
 dft’s
@@ -139,6 +142,7 @@ gitalk
 gitignore
 gmail
 graphene
+graphiql
 graphql
 griffiths
 grimme
@@ -165,6 +169,7 @@ icsd
 ifcs
 iframe
 iframes
+importances
 inequivalent
 initio
 inpainting
@@ -176,6 +181,7 @@ integro
 interlayer
 intermetallics
 interpretability
+interpunction
 invariances
 invertibility
 ipython
@@ -244,6 +250,7 @@ overscroll
 parallelizable
 parametrizations
 permutationally
+perovskite
 perovskites
 perturbative
 phablet
@@ -251,12 +258,15 @@ phononic
 photovoltaics
 pinterest
 plotly
+pokémons
 polydisperse
 polyfill
 polymorphs
 posteriori
 preds
 prefactor
+prefetch
+prefetching
 prepended
 prepending
 preprocess
@@ -270,6 +280,7 @@ pytest
 pytorch
 pyupgrade
 quantile
+qubit
 radford
 recentered
 regressand
@@ -319,6 +330,7 @@ stepsize
 stochastically
 stochasticity
 stringify
+structs
 studienstiftung
 studienstiftung's
 subclassing
@@ -330,6 +342,7 @@ subselection
 supercell
 superparamagnetism
 surjective
+symlinked
 symlinking
 symlinks
 symplectic
@@ -365,6 +378,7 @@ underexplored
 undersampled
 undoped
 unintuitive
+unitless
 unmount
 unnest
 unnormalized
