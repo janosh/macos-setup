@@ -11,7 +11,7 @@ Adapted from [Vítor’s dotfiles](https://github.com/vitorgalvao/dotfiles).
 To run all automatic scripts in this repo:
 
 ```sh
-zsh -c "$(curl -sSL 'https://raw.github.com/janosh/setup/master/install.sh')"
+zsh -c "$(curl -sSL 'https://raw.github.com/janosh/setup/main/install.sh')"
 ```
 
 Or, if you've already cloned the repo locally, simply run:
@@ -23,7 +23,7 @@ Or, if you've already cloned the repo locally, simply run:
 To customize OS settings and complete the setup, run:
 
 ```sh
-zsh -c "$(curl -sSL 'https://raw.github.com/janosh/setup/master/postInstall.sh')"
+zsh -c "$(curl -sSL 'https://raw.github.com/janosh/setup/main/postInstall.sh')"
 ```
 
 ## Organization

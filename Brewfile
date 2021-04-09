@@ -3,7 +3,7 @@
 # CLIs
 # ---
 brew 'git'
-brew 'node@12'
+brew 'node'
 brew 'yarn'
 brew 'rsync'
 brew 'ffmpeg'
@@ -12,12 +12,12 @@ brew 'trash'
 brew 'rename'
 brew 'exiftool'
 brew 'aspell'
-brew 'black'
-brew 'flake8'
 brew 'zsh-autosuggestions'
 brew 'zsh-completions'
 brew 'zsh-history-substring-search'
 brew 'zsh-syntax-highlighting'
+brew 'pngquant' # for compressing PNG files
+brew 'zopfli' # for compressing PNG files
 brew 'mas' # required to install Mac App Store apps
 brew 'eye-d3' # for editing ID 3 metadata on MP3 files
 # https://github.com/Homebrew/homebrew-bundle#requirements
@@ -26,13 +26,10 @@ brew 'eye-d3' # for editing ID 3 metadata on MP3 files
 # ---
 cask 'iterm2'
 cask 'visual-studio-code'
-cask 'google-chrome'
-cask 'firefox'
-cask 'deckset'
+cask 'brave-browser'
 cask 'imageoptim'
 cask 'appcleaner'
 cask 'dropbox'
-cask 'skype'
 cask 'transmission'
 cask 'vlc'
 cask 'handbrake'
@@ -45,6 +42,7 @@ cask 'daisydisk'
 cask 'keka'
 cask 'clipy'
 cask 'losslesscut'
+cask 'telegram'
 # QuickLook plugins
 cask 'provisionql'
 cask 'webpquicklook'
@@ -69,4 +67,3 @@ mas 'PDFScanner', id: 410968114
 mas 'Pages', id: 409201541
 mas 'Yoink', id: 457622435
 mas 'Numbers', id: 409203825
-mas 'Telegram', id: 747648890
