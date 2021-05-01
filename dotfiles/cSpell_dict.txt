@@ -15,6 +15,7 @@ argmin
 arity
 artup
 arxiv
+authsource
 autocorrelation
 autodiff
 autoencoders
@@ -48,6 +49,7 @@ bioinformatics
 bnns
 boltz
 bootcamp
+bosonic
 botros
 boxicons
 branin
@@ -132,6 +134,7 @@ frontmatter
 fullname
 fullscreen
 funcs
+functionals
 functools
 gaultois
 gaussians
@@ -206,6 +209,7 @@ magpy
 mailto
 markerclustererplus
 markowitz
+matchen
 matern
 mathcal
 matminer
@@ -235,6 +239,7 @@ nanoporous
 ndarray
 netlify
 nolas
+npmignore
 nullability
 numpy
 octicons
@@ -275,6 +280,7 @@ pretrained
 prismjs
 pycache
 pymatgen
+pymongo
 pyplot
 pytest
 pytorch
@@ -321,6 +327,8 @@ sklearn
 skopt
 socio
 socketio
+spacegroup
+spacegroups
 spacetime
 springel
 srivastava
@@ -342,6 +350,7 @@ subselection
 supercell
 superparamagnetism
 surjective
+sveltekit
 symlinked
 symlinking
 symlinks
@@ -386,6 +395,7 @@ unregularized
 unrenormalized
 unshift
 unsqueeze
+unsynchronized
 volker
 waals
 weigand
