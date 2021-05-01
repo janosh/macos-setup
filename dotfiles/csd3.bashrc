@@ -3,6 +3,8 @@
 
 alias sq="squeue -u jr769"
 alias mb="mybalance"
+alias brc="code ~/.bashrc"
+alias path='tr ":" "\n" <<< "$PATH"'
 source ~/.gitaliases
 
 # Key bindings for up/down arrow search through history

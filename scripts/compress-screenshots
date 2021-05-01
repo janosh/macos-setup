@@ -13,9 +13,14 @@
 
 for f in "$@"
 do
+  [[ $f != *.png ]] && continue # skip non-PNG files
+
   /usr/local/bin/pngquant 32 --skip-if-larger --ext .png --force "$f"
   # https://apple.stackexchange.com/a/385167
   syslog -s -l i "pngquant finished $f"
+
+  mogrify -resize '1200>' "$f" # resize only if wider than 1200px
+  syslog -s -l i "mogrify resized $f if it was wider than 1200px"
 
   /usr/local/bin/zopflipng -y "$f" "$f"
   syslog -s -l i "zopflipng finished $f"
