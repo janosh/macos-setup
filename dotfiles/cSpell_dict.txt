@@ -121,6 +121,7 @@ featurize
 featurized
 featurizers
 featurizing
+ferroelectricity
 flexbox
 flörchinger
 fock
@@ -217,6 +218,7 @@ matmul
 matplotlib
 matsubara
 mcmc
+mdsvex
 memoization
 memoized
 mesocosms
@@ -235,6 +237,7 @@ multigraphs
 multimodality
 multinomial
 multiscale
+multiselect
 nanoporous
 ndarray
 netlify
@@ -260,6 +263,7 @@ perovskites
 perturbative
 phablet
 phononic
+phonopy
 photovoltaics
 pinterest
 plotly
@@ -318,6 +322,7 @@ scherer
 schueler
 scikit
 scipy
+scrollable
 scrollbar
 seaborn
 semimetals
@@ -350,6 +355,7 @@ subselection
 supercell
 superparamagnetism
 surjective
+sveltejs
 sveltekit
 symlinked
 symlinking
@@ -396,6 +402,8 @@ unrenormalized
 unshift
 unsqueeze
 unsynchronized
+vaspdb
+vite
 volker
 waals
 weigand
