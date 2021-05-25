@@ -58,7 +58,7 @@ for pdf_path in pdfs:
     orig_size = os.path.getsize(pdf_path)
     compressed_size = os.path.getsize(compressed_pdf_path)
 
-    print(f"iLovePDF COMPRESSION RESULTS for {pdf_name}")
+    print(f"iLovePDF compression results for '{pdf_name}'")
 
     diff = orig_size - compressed_size
     if diff > 0:
