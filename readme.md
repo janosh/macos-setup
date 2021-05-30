@@ -1,10 +1,10 @@
-# macOS Setup Automation
+# macOS Setup Automation [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/janosh/macos-setup/main.svg)](https://results.pre-commit.ci/latest/github/janosh/macos-setup/main)
 
 ## Purpose
 
 This repo contains shell scripts and config files which, when executed and copied into their respective destinations, bring a clean install of macOS into a working-ready state.
 
-Adapted from [Vítor’s dotfiles](https://github.com/vitorgalvao/dotfiles).
+> Forked from [Vítor’s dotfiles](https://github.com/vitorgalvao/dotfiles) but quite diverged now.
 
 ## Usage
 
@@ -40,17 +40,3 @@ The important files in this repo are:
 `./scripts` holds the shell scripts. Containing only functions, none of them will do anything if run on their own. `install.sh` brings them together by sourcing all functions and running them in sequence.
 
 If you wish to run only parts of the setup process, source the appropriate script(s) and call the respective functions, e.g. `source scripts/2_apps.sh && brew_install`.
-
-## Other useful commands
-
-[To update macOS with minimal downtime](https://9to5mac.com/2017/07/20/how-to-update-mac-using-terminal), avoid installing new releases via the Mac App Store and instead run
-
-```sh
-sudo sh -c “softwareupdate -ia && reboot”
-```
-
-To update all `brew` apps and casks, run
-
-```sh
-brew upgrade && brew cleanup
-```

@@ -1,8 +1,8 @@
 # CSD3 bashrc
 # https://docs.hpc.cam.ac.uk
 
-alias ga='gid add'
-alias gc='gid commit'
+alias ga='git add'
+alias gc='git commit'
 alias gl='git pull'
 alias gf='git fetch'
 alias gr='git remote'
@@ -16,7 +16,6 @@ alias glog='git log -g'
 alias sq="squeue -u jr769"
 alias mb="mybalance"
 alias path='tr ":" "\n" <<< "$PATH"'
-source ~/.gitaliases
 
 # if no command specified and shell input is name of a directory, assume cd
 # https://gnu.org/software/bash/manual/html_node/The-Shopt-Builtin
