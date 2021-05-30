@@ -1,10 +1,11 @@
-#!/bin/zsh
+#!/bin/sh
 
 install() {
   # Source all install scripts.
-  for script in install_steps/*.sh; do
-    source "${script}"
-  done
+  source install_steps/1_setup.sh
+  source install_steps/2_apps.sh
+  source install_steps/3_config.sh
+  source install_steps/4_cleanup.sh
 
   caffeinate & # Prevent computer from going to sleep during setup.
   ask_details
@@ -16,7 +17,6 @@ install() {
   configure_zsh
   configure_git
   symlink_custom_scripts
-  custom_app_icons
   configure_ssh
 
   brew cleanup
@@ -26,5 +26,5 @@ install() {
 }
 
 # Run and log errors to file (but still show them when they happen).
-readonly error_log="${HOME}/Desktop/install_errors.log"
-install 2> >(tee "${error_log}")
+readonly ERROR_LOG="${HOME}/Desktop/install_errors.log"
+install 2> >(tee "${ERROR_LOG}")

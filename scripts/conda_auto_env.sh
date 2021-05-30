@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 # Automatically activates conda environments when entering directories
 # containing a conda environment file. The file must be named one of
@@ -23,21 +23,20 @@ chpwd() {
   # On Linux replace `find -E` with `f -regextype posix-extended`.
   FILE="$(find -E . -maxdepth 1 -regex '.*(env(ironment)?|requirements)\.ya?ml' -print -quit)"
   if [[ -e $FILE ]]; then
-    ENV=$(sed -n 's/name: //p' $FILE)
+    ENV=$(sed -n 's/name: //p' "$FILE")
     # Check if env is already active.
-    if [[ $CONDA_DEFAULT_ENV != $ENV ]]; then
-      conda activate $ENV
-      # If env activation is unsuccessful, prompt user whether to create conda env from file.
-      if [ $? -ne 0 ]; then
+    if [[ $CONDA_DEFAULT_ENV != "$ENV" ]]; then
+      if ! conda activate "$ENV"; then
+        # If env activation is unsuccessful, prompt user whether to create conda env from file.
         while true; do
           # Read user reply into variable YorN.
-          read "YorN?[conda_auto_env] Environment '$ENV' doesn't exist. Would you like to create it now? (y/n)"$'\n'
+          read -r "YorN?[conda_auto_env] Environment '$ENV' doesn't exist. Would you like to create it now? (y/n)"$'\n'
           # $'\n' for newline. https://unix.stackexchange.com/a/126316/315020
           if [ "$YorN" = "" ]; then YorN='y'; fi # interpret enter as y
           case $YorN in
               [Yy] ) echo Proceeding...
-                conda env create -f $FILE
-                conda activate $ENV;;
+                conda env create -f "$FILE"
+                conda activate "$ENV";;
               [Nn] ) echo Exiting...; break;;
               * ) echo "Enter y for yes or n for no.";;
           esac
@@ -47,7 +46,7 @@ chpwd() {
     fi
   # Deactivate env when exciting the env file's directory.
   elif [[ $PATH = */envs/* ]]\
-    && [[ $(pwd) != $CONDA_ENV_ROOT ]]\
+    && [[ $(pwd) != "$CONDA_ENV_ROOT" ]]\
     && [[ $(pwd) != $CONDA_ENV_ROOT/* ]]
   then
     CONDA_ENV_ROOT=""

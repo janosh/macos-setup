@@ -1,9 +1,20 @@
 # CSD3 bashrc
 # https://docs.hpc.cam.ac.uk
 
+alias ga='gid add'
+alias gc='gid commit'
+alias gl='git pull'
+alias gf='git fetch'
+alias gr='git remote'
+alias grv='git remote-v'
+alias gp='git push'
+alias gb='git branch'
+alias gsw='git switch'
+alias grb='git rebase'
+alias glog='git log -g'
+
 alias sq="squeue -u jr769"
 alias mb="mybalance"
-alias brc="code ~/.bashrc"
 alias path='tr ":" "\n" <<< "$PATH"'
 source ~/.gitaliases
 
@@ -25,21 +36,6 @@ fi
 # https://coderwall.com/p/oqtj8w/the-single-most-useful-thing-in-bash
 # set show-all-if-ambiguous on
 # set completion-ignore-case on
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/jr769/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/jr769/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/jr769/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/jr769/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
 conda activate py38
 

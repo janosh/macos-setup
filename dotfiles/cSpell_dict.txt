@@ -57,7 +57,10 @@ Matbench
 Mathematica
 Mathieu
 Mesocosm
+Mylio
+Mylio's
 OQMD
+PNPM
 Parametrizing
 Pastur
 Pixabay
@@ -102,6 +105,7 @@ aleatoric
 algolia
 algolia's
 algoliasearch
+allowfullscreen
 altenkirch
 anharmonic
 anharmonicity
@@ -145,6 +149,7 @@ biogeochemists
 bioinformatics
 bnns
 boltz
+boltztrap
 bootcamp
 bosonic
 botros
@@ -176,6 +181,7 @@ conformant
 connectivities
 contentful
 convolutional
+cornflowerblue
 cuda
 customizability
 dataset
@@ -390,6 +396,7 @@ pyplot
 pytest
 pytorch
 pyupgrade
+qlaunch
 quantile
 qubit
 radford

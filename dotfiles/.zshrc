@@ -4,18 +4,7 @@ export ZSH="/Users/Janosh/.oh-my-zsh"
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="robbyrussell"
-
-# Uncomment the following line to display red dots whilst waiting for completion.
-COMPLETION_WAITING_DOTS="true"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(
-  git
-)
+export ZSH_THEME="robbyrussell"
 
 source $ZSH/oh-my-zsh.sh
 
@@ -24,10 +13,22 @@ source $ZSH/oh-my-zsh.sh
 # Remember to set iTerm key bindings to "Natural Text Editing"
 # under Settings > Profiles > Keys > Presets > Natural Text Editing.
 
+alias ga='gid add'
+alias gc='gid commit'
+alias gl='git pull'
+alias gf='git fetch'
+alias gr='git remote'
+alias grv='git remote-v'
+alias gp='git push'
+alias gb='git branch'
+alias gsw='git switch'
+alias grb='git rebase'
+alias glog='git log -g'
+
 alias path='echo "${PATH//:/\n}"'
 alias brewup='brew upgrade && brew cleanup'
 alias yarnup='yarn global upgrade --latest && yarn cache clean'
-alias softup='sudo sh -c “softwareupdate -ia && reboot”'
+alias ssh="ssh -F ~/.ssh/config"  # https://stackoverflow.com/a/63935109
 
 # Makes conda activate <env_name> available in terminal.
 source "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh"
@@ -41,3 +42,5 @@ fpath=(/usr/local/share/zsh-completions $fpath)
 
 # https://github.com/zsh-users/zsh-autosuggestions/issues/351
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste)
+
+function gam() { ~/Repos/google-workspace/gam/gam "$@" ; }

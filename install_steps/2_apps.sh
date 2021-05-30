@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 brew_install() {
   renew_sudo
@@ -7,16 +7,5 @@ brew_install() {
 }
 
 yarn_install() { # Install JS CLIs.
-  readonly local js_clis=(
-    gatsby-cli \
-    gatsby-dev-cli \
-    netlify-cli \
-    jest-cli \
-    contentful-cli \
-    eslint
-  )
-
-  for cli in "${js_clis[@]}"; do
-    yarn global add $cli
-  done
+  yarn global add netlify-cli eslint prettier
 }

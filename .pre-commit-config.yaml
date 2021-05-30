@@ -1,0 +1,13 @@
+# Install these hooks with `pre-commit install`.
+# Setup CI at https://pre-commit.ci.
+
+ci:
+  autoupdate_schedule: quarterly
+
+repos:
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.7.2.1
+    hooks:
+    - id: shellcheck
+      # -x/--external-sources: Allow 'source' outside of FILES
+      args: [-x, --shell=bash]

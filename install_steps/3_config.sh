@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 configure_zsh() {
   # Link .zshrc from dotfiles to home directory.
@@ -15,10 +15,10 @@ configure_git() {
   sudo rm /usr/bin/git
 
   # Configure git username.
-  git config --global user.name "${git_name}"
+  git config --global user.name "${GIT_NAME}"
   # Authenticate with GitHub.
-  git config --global user.email "${github_email}"
-  git config --global github.user "${github_username}"
+  git config --global user.email "${GITHUB_EMAIL}"
+  git config --global github.user "${GITHUB_USERNAME}"
   git config --global credential.helper osxkeychain
 
   # Hard-link gobal gitignore file into default location.
@@ -44,25 +44,6 @@ configure_git() {
 symlink_custom_scripts() {
   # uses symbolic link to be able to resolve local .env file holding iLovePDF API key via os.readlink()
   ln -s "$(pwd)/scripts/ilove_pdf_compress" /usr/local/bin
-}
-
-custom_app_icons() {
-  typeset -A apps=(
-    Handbrake Handbrake.icns
-    Transmission Transmission.icns
-    Tune•Instructor AppIcon.icns
-    VLC vlc.icns
-    Zotero Zotero.icns
-  )
-
-  for app icon_file_name in "${(kv)apps}"; do
-    cp "appIcons/$app.icns" "/Applications/$app.app/Contents/Resources/$icon_file_name"
-    touch "/Applications/$app.app"
-    # Necessary to avoid the following error after icon change:
-    # "{app} is damaged and can’t be opened. You should move it to the Trash"
-    # See https://apple.stackexchange.com/a/300304.
-    xattr -cr "/Applications/$app.app"
-  done
 }
 
 configure_ssh() {

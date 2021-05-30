@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/sh
 
 # --- Helper functions ---
 
@@ -55,7 +55,7 @@ echo "After running the main install script, this script will help configure the
 
 # Ask for 'sudo' authentication.
 if sudo --non-interactive true 2> /dev/null; then
-  read -s -n0 -p "$(tput bold)Some commands require 'sudo', but it seems you have already authenticated. When you’re ready to continue, press ↵.$(tput sgr0)"
+  read -r -s -n0 -p "$(tput bold)Some commands require 'sudo', but it seems you have already authenticated. When you’re ready to continue, press ↵.$(tput sgr0)"
   echo
 else
   echo -n "$(tput bold)When you’re ready to continue, insert your password. This is done upfront for the commands that require 'sudo'.$(tput sgr0) "
@@ -85,10 +85,10 @@ defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 info 'Disable Resume system-wide.'
 defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
 
-info 'Disable the prompt “Are you sure you want to open this application?”.'
+info 'Disable the prompt "Are you sure you want to open this application?".'
 defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSQuaratine -bool false
 
-info 'Disable the Gatekeeper prompt “{appname} can’t be opened because it is from an unidentified developer”.'
+info 'Disable the Gatekeeper prompt "{appname} cannot be opened because it is from an unidentified developer".'
 sudo spctl --master-disable
 
 info 'Prevent Gatekeeper from re-enabling itself after 30 days.'
