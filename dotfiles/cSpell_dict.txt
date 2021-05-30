@@ -5,6 +5,7 @@ aleatoric
 algolia
 algolia's
 algoliasearch
+allowfullscreen
 altenkirch
 anharmonic
 anharmonicity
@@ -48,6 +49,7 @@ biogeochemists
 bioinformatics
 bnns
 boltz
+boltztrap
 bootcamp
 bosonic
 botros
@@ -78,6 +80,7 @@ conformant
 connectivities
 contentful
 convolutional
+cornflowerblue
 cuda
 customizability
 dataset
@@ -289,6 +292,7 @@ pyplot
 pytest
 pytorch
 pyupgrade
+qlaunch
 quantile
 qubit
 radford
