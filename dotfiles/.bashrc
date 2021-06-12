@@ -10,8 +10,9 @@ alias grv='git remote-v'
 alias gp='git push'
 alias gb='git branch'
 alias gsw='git switch'
+alias gco='git checkout'
 alias grb='git rebase'
-alias glog='git log -g'
+alias glog='git log --oneline'
 
 alias sq="squeue -u jr769"
 alias mb="mybalance"
