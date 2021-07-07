@@ -12,6 +12,7 @@ CNNs
 Canonicalization
 Castelli
 Christos
+Coolpix
 Coronavirus
 Covid
 DOIs
@@ -30,6 +31,7 @@ Gantt
 Gaussianization
 Geosciences
 Germain
+Gespinnstmotte
 Girton
 Goodfellow
 Grammarly
@@ -38,11 +40,13 @@ Hadamard
 Hernienbehandlungen
 Hypernetworks
 IIFE
+INCAR
 IPCC
 Ising
 Jacobians
 Jang
 Jupyter
+KPOINT
 Kitaev
 Kleinicke
 Kosiorek
@@ -63,6 +67,7 @@ OQMD
 PNPM
 Parametrizing
 Pastur
+Pettifor
 Pixabay
 RNVP
 ROCAUC
@@ -72,6 +77,7 @@ Researchgate
 Rhys
 Ricci
 Riebesell's
+SLURM
 SOTA
 Sanderson
 Seff
@@ -87,11 +93,13 @@ TECs
 TEGs
 Taliarte
 Todos
+Trotthle
 UCSB
 VAEs
 VASP
 VASP's
 Vecteezy
+Vercel
 Viridis
 Wavenet
 Wegener
@@ -116,6 +124,7 @@ argmin
 arity
 artup
 arxiv
+atomate
 authsource
 autocorrelation
 autodiff
@@ -159,6 +168,8 @@ bucher
 burnin
 calabi
 captionsetup
+cclake
+checkpointed
 cheminformatics
 chmod
 christof
@@ -244,6 +255,7 @@ functools
 gaultois
 gaussians
 gdpr
+geht's
 gelman
 generalizability
 gitalk
@@ -295,6 +307,7 @@ invertibility
 ipython
 isort
 janosh
+jarib
 joomla
 jäckel
 jürgen
@@ -318,6 +331,7 @@ markowitz
 matchen
 matern
 mathcal
+mathrm
 matminer
 matmul
 matplotlib
@@ -404,6 +418,7 @@ recentered
 regressand
 regressands
 regularizers
+rehype
 relu
 renormalization
 renormalize
@@ -439,6 +454,7 @@ shortcodes
 silico
 sklearn
 skopt
+skylake
 socio
 socketio
 spacegroup
@@ -452,6 +468,7 @@ stepsize
 stochastically
 stochasticity
 stringify
+struct
 structs
 studienstiftung
 studienstiftung's
@@ -523,3 +540,4 @@ xlabel
 ylabel
 youtube
 yscale
+ÖPNV

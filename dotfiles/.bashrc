@@ -6,7 +6,7 @@ alias gc='git commit'
 alias gl='git pull'
 alias gf='git fetch'
 alias gr='git remote'
-alias grv='git remote-v'
+alias grv='git remote -v'
 alias gp='git push'
 alias gb='git branch'
 alias gsw='git switch'
@@ -14,7 +14,12 @@ alias gco='git checkout'
 alias grb='git rebase'
 alias glog='git log --oneline'
 
+# list queued SLURM jobs
 alias sq="squeue -u jr769"
+# multiple stats about running and passed SLURM jobs in table form
+# (includes jobs since midnight today by default, use -S MMDD to specify other dates)
+alias sacctx="sacct -X --format jobid,partition,exitcode,elapsed,state,reqmem,alloctres%40"
+# show remaining computation budget
 alias mb="mybalance"
 alias path='tr ":" "\n" <<< "$PATH"'
 
