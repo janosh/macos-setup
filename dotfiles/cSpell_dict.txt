@@ -16,6 +16,7 @@ argmin
 arity
 artup
 arxiv
+atomate
 authsource
 autocorrelation
 autodiff
@@ -58,6 +59,8 @@ branin
 bucher
 calabi
 captionsetup
+cclake
+checkpointed
 cheminformatics
 chmod
 christof
@@ -143,6 +146,7 @@ functools
 gaultois
 gaussians
 gdpr
+geht's
 gelman
 generalizability
 gitalk
@@ -194,6 +198,7 @@ invertibility
 ipython
 isort
 janosh
+jarib
 joomla
 jürgen
 karpathy
@@ -216,6 +221,7 @@ markowitz
 matchen
 matern
 mathcal
+mathrm
 matminer
 matmul
 matplotlib
@@ -300,6 +306,7 @@ recentered
 regressand
 regressands
 regularizers
+rehype
 relu
 renormalization
 renormalize
@@ -334,6 +341,7 @@ shortcodes
 silico
 sklearn
 skopt
+skylake
 socio
 socketio
 spacegroup
@@ -347,6 +355,7 @@ stepsize
 stochastically
 stochasticity
 stringify
+struct
 structs
 studienstiftung
 studienstiftung's
