@@ -1,3 +1,6 @@
 repos:
   - repo: https://github.com/shellcheck-py/shellcheck-py
     hooks:
+
+    hooks:
+      - id: check-yaml
