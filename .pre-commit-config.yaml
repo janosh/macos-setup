@@ -11,3 +11,10 @@ repos:
     - id: shellcheck  # docs: https://github.com/koalaman/shellcheck/wiki
       # -x/--external-sources: Allow 'source' outside of FILES
       args: [-x, --shell=bash]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: trailing-whitespace

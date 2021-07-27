@@ -12,4 +12,3 @@ Host login-e-*
 Host csd3* login-e-*
   User jr769
   IdentityFile /Users/Janosh/.ssh/id_rsa_csd3
-  LocalForward 6006 localhost:6006
