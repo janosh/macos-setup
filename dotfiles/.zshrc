@@ -11,6 +11,11 @@ source ~/.oh-my-zsh/oh-my-zsh.sh
 # Remember to set iTerm key bindings to "Natural Text Editing"
 # under Settings > Profiles > Keys > Presets > Natural Text Editing.
 
+# activate default virtualenv
+# shellcheck disable=SC1090
+source ~/.venv/py39/bin/activate
+
+
 alias ga='git add'
 alias gc='git commit'
 alias gl='git pull'
@@ -29,10 +34,6 @@ alias brewup='brew upgrade && brew cleanup'
 alias yarnup='yarn global upgrade --latest && yarn cache clean'
 alias ssh="ssh -F ~/.ssh/config"  # https://stackoverflow.com/a/63935109
 
-# Makes conda activate <env_name> available in terminal.
-# shellcheck disable=SC1091
-source "/usr/local/Caskroom/miniconda/base/etc/profile.d/conda.sh"
-conda activate py38
 
 # Source brew-installed zsh plugins.
 # shellcheck disable=SC1094,SC1091
@@ -45,4 +46,4 @@ source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # https://github.com/zsh-users/zsh-autosuggestions/issues/351
 ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste)
 
-function gam() { ~/Repos/google-workspace/gam/gam "$@" ; }
+function gam() { ~/Repos/sbs-google-workspace/gam/gam "$@" ; }

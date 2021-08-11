@@ -21,16 +21,18 @@ alias sq="squeue -u jr769"
 alias sacctx="sacct -X --format jobid,partition,exitcode,elapsed,state,reqmem,alloctres%40"
 # show remaining computation budget
 alias mb="mybalance"
-alias path='tr ":" "\n" <<< "$PATH"'
+alias path='echo "${PATH//:/\n}"'
 
 # if no command specified and shell input is name of a directory, assume cd
 # https://gnu.org/software/bash/manual/html_node/The-Shopt-Builtin
 shopt -s autocd
 # https://coderwall.com/p/oqtj8w/the-single-most-useful-thing-in-bash
-# set show-all-if-ambiguous on
-# set completion-ignore-case on
+set show-all-if-ambiguous on
+set completion-ignore-case on
 
-conda activate py38
+# activate virtualenv
+# shellcheck disable=SC1090
+source ~/.venv/py38/bin/activate
 
 # shell prompt (PS1 = prompt string 1)
 parse_git_branch() {
@@ -42,6 +44,7 @@ parse_git_branch() {
 # \[\033[34m\] = blue
 # \[\033[00m\] = white
 export PS1="\[\033[34m\]\h \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\]$ "
+export LANG=C  # https://stackoverflow.com/a/2510548
 
 export FW_CONFIG_FILE=/home/jr769/dielectric-frontier/config/FW_config.yaml
 
