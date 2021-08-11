@@ -86,6 +86,7 @@ convolutional
 cornflowerblue
 cuda
 customizability
+darkorange
 dataset
 datasets
 decadal
@@ -164,6 +165,7 @@ heteroscedasticity
 heterostructure
 heterostructures
 higgs
+himem
 hmc's
 homoscedastic
 hoverable
@@ -216,6 +218,7 @@ linebreak
 macrophysics
 magpy
 mailto
+markdownlint
 markerclustererplus
 markowitz
 matchen
@@ -241,6 +244,8 @@ moduli
 mongodb
 mousedown
 mphil
+mpiexec
+mpirun
 msnbc
 multigraphs
 multimodality
@@ -265,6 +270,7 @@ overfit
 overfitting
 overscroll
 parallelizable
+parallelization
 parametrizations
 permutationally
 perovskite
@@ -298,6 +304,7 @@ pyplot
 pytest
 pytorch
 pyupgrade
+pyyaml
 qlaunch
 quantile
 qubit
@@ -424,6 +431,7 @@ wetterich
 wiedemann
 winton
 xlabel
+yamllint
 ylabel
 youtube
 yscale
