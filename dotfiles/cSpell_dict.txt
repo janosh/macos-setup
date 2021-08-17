@@ -254,6 +254,7 @@ multiscale
 multiselect
 nanoporous
 ndarray
+neovim
 netlify
 nolas
 npmignore
