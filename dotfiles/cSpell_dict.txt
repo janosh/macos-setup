@@ -16,6 +16,7 @@ Cloudinary
 Coolpix
 Coronavirus
 Covid
+DFPTFW
 DOIs
 Datasheet
 Deduplicated
@@ -40,6 +41,7 @@ HEAs
 Hadamard
 Hernienbehandlungen
 Hypernetworks
+IBRION
 IIFE
 INCAR
 IPCC
@@ -49,9 +51,11 @@ Jacobians
 Jang
 Jupyter
 KPOINT
+Kingsbury
 Kitaev
 Kleinicke
 Kosiorek
+LORBIT
 Langevin
 Louizos
 MNDO
@@ -369,6 +373,7 @@ multiscale
 multiselect
 nanoporous
 ndarray
+neovim
 netlify
 nolas
 npmignore

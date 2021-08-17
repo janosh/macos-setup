@@ -14,14 +14,14 @@ alias gco='git checkout'
 alias grb='git rebase'
 alias glog='git log --oneline'
 
-# list queued SLURM jobs
-alias sq="squeue -u jr769"
+# list queued SLURM jobs (docs at https://slurm.schedmd.com/squeue.html)
+alias sq="squeue --user jr769 --format '%10i %10P %16j %8u %8T %8M %9l %6D %R'"
 # multiple stats about running and passed SLURM jobs in table form
 # (includes jobs since midnight today by default, use -S MMDD to specify other dates)
 alias sacctx="sacct -X --format jobid,partition,exitcode,elapsed,state,reqmem,alloctres%40"
 # show remaining computation budget
 alias mb="mybalance"
-alias path='echo "${PATH//:/\n}"'
+alias path='echo -e "${PATH//:/\n}"'
 
 # if no command specified and shell input is name of a directory, assume cd
 # https://gnu.org/software/bash/manual/html_node/The-Shopt-Builtin
@@ -32,7 +32,7 @@ set completion-ignore-case on
 
 # activate virtualenv
 # shellcheck disable=SC1090
-source ~/.venv/py38/bin/activate
+source ~/rds/hpc-work/.venv/py38/bin/activate
 
 # shell prompt (PS1 = prompt string 1)
 parse_git_branch() {
@@ -46,7 +46,8 @@ parse_git_branch() {
 export PS1="\[\033[34m\]\h \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\]$ "
 export LANG=C  # https://stackoverflow.com/a/2510548
 
-export FW_CONFIG_FILE=/home/jr769/dielectric-frontier/config/FW_config.yaml
+export FW_CONFIG_FILE=/home/jr769/rds/hpc-work/dielectric-frontier/fireworks_config/FW_config.yaml
+
 
 # https://superuser.com/a/686293 (see link in 2nd comment)
 if [[ $- == *i* ]]; then  # check if running in interactive shell that supports line editing
@@ -56,4 +57,8 @@ if [[ $- == *i* ]]; then  # check if running in interactive shell that supports 
     bind '"\e[B": history-search-forward'
     bind '"\eOA": history-search-backward'
     bind '"\eOB": history-search-forward'
+
+    if [ "$PWD" = "$HOME" ]; then
+        cd ~/rds/hpc-work || return
+    fi
 fi
