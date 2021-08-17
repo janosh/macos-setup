@@ -1,69 +1,55 @@
 # Used by the brew_install() function.
 
 # CLIs
-# ---
-brew 'git'
-brew 'node'
-brew 'yarn'
-brew 'rsync'
-brew 'ffmpeg'
-brew 'imagemagick'
-brew 'trash'
-brew 'rename'
-brew 'exiftool'
-brew 'aspell'
-brew 'zsh-autosuggestions'
-brew 'zsh-completions'
-brew 'zsh-history-substring-search'
-brew 'zsh-syntax-highlighting'
-brew 'pngquant' # for compressing PNG files
-brew 'zopfli' # for compressing PNG files
-brew 'mas' # required to install Mac App Store apps
-brew 'eye-d3' # for editing ID 3 metadata on MP3 files
-# https://github.com/Homebrew/homebrew-bundle#requirements
+brew "ffmpeg"
+brew "gh"
+brew "git"
+brew "python"
+brew "imagemagick"
+brew "imageoptim-cli"
+brew "mas" # required to install Mac App Store apps below
+brew "node"
+brew "pngquant"
+brew "pre-commit"
+brew "rename"
+brew "rsync"
+brew "shellcheck"
+brew "trash"
+brew "yarn"
+brew "zopfli"
+brew "zsh-autosuggestions"
+brew "zsh-completions"
+brew "zsh-history-substring-search"
+brew "zsh-syntax-highlighting"
 
 # Apps
-# ---
-cask 'iterm2'
-cask 'visual-studio-code'
-cask 'brave-browser'
-cask 'imageoptim'
-cask 'appcleaner'
-cask 'dropbox'
-cask 'transmission'
-cask 'vlc'
-cask 'handbrake'
-cask 'nordvpn'
-cask 'coconutbattery'
-cask 'miniconda'
-cask 'zotero'
-cask 'transmit'
-cask 'daisydisk'
-cask 'keka'
-cask 'clipy'
-cask 'losslesscut'
-cask 'telegram'
-# QuickLook plugins
-cask 'provisionql'
-cask 'webpquicklook'
-cask 'qlvideo'
-cask 'qlimagesize'
-cask 'qlmarkdown'
-cask 'qlcolorcode'
-cask 'qlstephen'
-cask 'quicklook-json'
+cask "appcleaner"
+cask "clipy"
+cask "coconutbattery"
+cask "daisydisk"
+cask "dropbox"
+cask "handbrake"
+cask "imageoptim"
+cask "iterm2"
+cask "mactex-no-gui"
+cask "mylio"
+cask "nordvpn"
+cask "slack"
+cask "telegram"
+cask "transmission"
+cask "visual-studio-code"
+cask "vlc"
+cask "zotero"
 
 # Mac App Store
-# ---
-mas 'Magnet', id: 441258766
-mas 'Final Cut Pro', id: 424389933
-mas 'Keynote', id: 409183694
-mas 'MoneyMoney', id: 872698314
-mas 'Slack', id: 803453959
-mas 'Affinity Designer', id: 824171161
-mas '1Password', id: 443987910
-mas 'Gemini', id: 463541543
-mas 'PDFScanner', id: 410968114
-mas 'Pages', id: 409201541
-mas 'Yoink', id: 457622435
-mas 'Numbers', id: 409203825
+mas "1Password", id: 443987910
+mas "Affinity Designer", id: 824171161
+mas "Final Cut Pro", id: 424389933
+mas "Gemini", id: 463541543
+mas "Keynote", id: 409183694
+mas "Magnet", id: 441258766
+mas "MoneyMoney", id: 872698314
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "PDFScanner", id: 410968114
+mas "Yoink", id: 457622435
