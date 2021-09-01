@@ -18,3 +18,11 @@ repos:
       - id: end-of-file-fixer
       - id: check-yaml
       - id: trailing-whitespace
+      - id: check-shebang-scripts-are-executable
+      - id: mixed-line-ending
+
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.11.0
+    hooks:
+    - id: markdownlint
+      args: [-r, '~MD013,~MD002']

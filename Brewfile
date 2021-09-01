@@ -1,6 +1,7 @@
 # Used by the brew_install() function.
 
 # CLIs
+brew "blueutil" # https://apple.stackexchange.com/a/47508
 brew "ffmpeg"
 brew "gh"
 brew "git"
