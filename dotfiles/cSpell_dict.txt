@@ -178,6 +178,7 @@ hyperoptimizing
 hyperparameterized
 hyperparameters
 hyperparams
+hyperthreading
 icsd
 ifcs
 iframe
@@ -431,8 +432,11 @@ weigand
 wetterich
 wiedemann
 winton
+xerr
 xlabel
 yamllint
+yerr
 ylabel
 youtube
 yscale
+zorder

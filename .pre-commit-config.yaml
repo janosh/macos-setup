@@ -4,3 +4,6 @@ repos:
 
     hooks:
       - id: check-yaml
+      - id: mixed-line-ending
+
+    hooks:
