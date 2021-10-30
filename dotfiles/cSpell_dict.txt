@@ -1,5 +1,6 @@
 adhoc
 afara
+aflow
 airtable
 aleatoric
 algolia
@@ -62,6 +63,7 @@ boltztrap
 bootcamp
 bosonic
 botros
+BOWSR
 boxicons
 branin
 Broyden
@@ -236,6 +238,7 @@ hyperparameters
 hyperparams
 hyperthreading
 IBRION
+icelake
 icsd
 ifcs
 iframe
@@ -397,6 +400,7 @@ polydisperse
 polyfill
 polymorphs
 posteriori
+POTCARs
 preds
 prefactor
 prefetch
@@ -409,6 +413,7 @@ pretrained
 prismjs
 Promotionsförderung
 pycache
+Pycharm
 pydocstyle
 pylint
 pymatgen
@@ -507,6 +512,7 @@ subclassing
 subnavs
 suboptimally
 subpreambles
+subprojects
 subschema
 subselection
 supercapacitor
@@ -584,6 +590,7 @@ VASP
 VASP's
 vaspdb
 Vecteezy
+vectorizing
 Vercel
 Viridis
 virtualenv
@@ -609,4 +616,6 @@ youtube
 yscale
 Yunwei
 zcat
+zopfli
+zopflipng
 zorder
