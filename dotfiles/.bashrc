@@ -3,6 +3,10 @@
 
 alias ga='git add'
 alias gc='git commit'
+alias gca='git commit --amend'
+alias gcan='git commit --amend --no-edit'
+alias gt='git tag'
+alias gst='git stash'
 alias gl='git pull'
 alias gf='git fetch'
 alias gr='git remote'
@@ -11,6 +15,7 @@ alias gp='git push'
 alias gb='git branch'
 alias gsw='git switch'
 alias gco='git checkout'
+alias gm='git merge'
 alias grb='git rebase'
 alias glog='git log --oneline'
 
