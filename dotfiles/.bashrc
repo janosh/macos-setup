@@ -19,7 +19,10 @@ alias gm='git merge'
 alias grb='git rebase'
 alias glog='git log --oneline'
 
-alias l='ls -al'
+# ls options: -l: long format
+# -h: human-readable file size
+# -A: show hidden files but not ..
+alias l='ls -lhA'
 # list queued SLURM jobs (docs at https://slurm.schedmd.com/squeue.html)
 alias sq="squeue --user jr769 --format '%10i %10P %16j %8u %8T %8M %9l %6D %R'"
 # multiple stats about running and passed SLURM jobs in table form

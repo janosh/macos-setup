@@ -6,3 +6,6 @@
 
 # VS Code
 .vscode
+
+# temporary sandbox file
+t.py
