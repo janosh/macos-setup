@@ -29,7 +29,6 @@ alias sq="squeue --user jr769 --format '%10i %10P %16j %8u %8T %8M %9l %6D %R'"
 # (includes jobs since midnight today by default, use -S MMDD to specify other dates)
 alias sacctx="sacct -X --format jobid,partition,exitcode,elapsed,state,reqmem,alloctres%40"
 # show remaining computation budget
-alias mb="mybalance"
 alias path='echo -e "${PATH//:/\n}"'
 
 # if no command specified and shell input is name of a directory, assume cd

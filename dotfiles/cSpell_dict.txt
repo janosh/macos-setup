@@ -81,6 +81,7 @@ Castelli
 CASTEP
 cclake
 CGCNN
+chalcogen
 checkpointed
 cheminformatics
 chmod
@@ -115,6 +116,7 @@ Copernicium
 Cori
 cornflowerblue
 Coronavirus
+coulombic
 Covid
 cuda
 cuprate
@@ -130,6 +132,7 @@ decorrelated
 decorrelating
 decorrelation
 Deduplicated
+delithiated
 denormed
 deps
 descriptor's
@@ -159,9 +162,11 @@ elbo
 electronegativities
 electronegativity
 Elpasolites
+encodable
 ENCUT
 engel
 ensembling
+Enzerhof
 EPFL
 epsrc
 equatorward
@@ -186,6 +191,8 @@ featurizers
 featurizing
 femto
 ferroelectricity
+ferromagnetically
+Figshare
 Firetask
 Firetasks
 fireworker
@@ -290,6 +297,7 @@ interlayer
 intermetallics
 interpretability
 interpunction
+interruptible
 intralayer
 invariances
 invertibility
@@ -336,6 +344,7 @@ macrophysics
 magpy
 mailto
 Marchenko
+MARD
 markdownlint
 markdownlintrc
 markerclustererplus
@@ -373,6 +382,8 @@ MNIST
 moduli
 mongodb
 Monkhorst
+monoaluminate
+monoclinic
 MOSFET
 mousedown
 mphil
@@ -409,7 +420,9 @@ OPTIMADE
 optimizer
 optimizer's
 OQMD
+orthogonalized
 orthonormalized
+orthorhombically
 OUTCAR
 overengineered
 overfit
@@ -419,12 +432,15 @@ parallelizable
 parallelization
 parametrizations
 Parametrizing
+passivation
 Pastur
 perceptron
 percolative
+Perdew
 permutationally
 perovskite
 perovskites
+Persson
 perturbative
 Peta
 Petousis
@@ -446,6 +462,7 @@ polyfill
 polymorphs
 posteriori
 POTCARs
+Pourbaix
 prebuild
 prebundle
 predev
@@ -456,6 +473,7 @@ prefetching
 prepended
 prepending
 preprocess
+prereleases
 preselection
 pretrained
 prismjs
@@ -473,6 +491,7 @@ pytorch
 pyupgrade
 pyyaml
 qlaunch
+quadrupolar
 quantile
 qubit
 radford
@@ -575,6 +594,7 @@ supercell
 Supercon
 superhard
 superlattices
+superoxides
 superparamagnetism
 Surfverhalten
 Surjections
@@ -651,6 +671,7 @@ VAEs
 VASP
 VASP's
 vaspdb
+vasprun
 Vecteezy
 vectorizing
 Vercel

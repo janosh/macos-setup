@@ -1,13 +1,15 @@
 ci:
   autoupdate_schedule: quarterly
 
+default_stages: [commit]
+
 repos:
   - repo: https://github.com/shellcheck-py/shellcheck-py
     rev: v0.7.2.1
     hooks:
-    - id: shellcheck  # docs: https://github.com/koalaman/shellcheck/wiki
-      # -x/--external-sources: Allow 'source' outside of FILES
-      args: [-x, --shell=bash]
+      - id: shellcheck  # docs: https://github.com/koalaman/shellcheck/wiki
+        # -x/--external-sources: Allow 'source' outside of FILES
+        args: [-x, --shell=bash]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.0.1
@@ -24,11 +26,12 @@ repos:
   - repo: https://github.com/markdownlint/markdownlint
     rev: v0.11.0
     hooks:
-    - id: markdownlint
-      args: [-r, '~MD013,~MD002']
+      - id: markdownlint
+        args: [-r, '~MD013,~MD002']
 
   - repo: https://github.com/codespell-project/codespell
     rev: v2.1.0
     hooks:
-    - id: codespell
-      args: [--ignore-words-list, iterm]
+      - id: codespell
+        stages: [commit, commit-msg]
+        args: [--ignore-words-list, iterm]

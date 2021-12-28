@@ -2,7 +2,8 @@
 
 configure_zsh() {
   # Link .zshrc from dotfiles to home directory.
-  ln dotfiles/.zshrc ~
+  # -f: Overwrite config if already exists.
+  ln -f dotfiles/.zshrc ~
 
   # Install Oh My Zsh.
   sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"

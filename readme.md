@@ -40,3 +40,17 @@ The important files in this repo are:
 `./scripts` holds the shell scripts. Containing only functions, none of them will do anything if run on their own. `install.sh` brings them together by sourcing all functions and running them in sequence.
 
 If you wish to run only parts of the setup process, source the appropriate script(s) and call the respective functions, e.g. `source scripts/2_apps.sh && brew_install`.
+
+## Troubleshooting
+
+[When encountering `zsh: operation not permitted.`](https://alansiu.net/2021/08/19/troubleshooting-zsh-operation-not-permitted) errors on a new mac, try
+
+```sh
+xattr -l ./install.sh
+```
+
+If you see com.apple.quarantine in there, remove it by running
+
+```sh
+xattr -d com.apple.quarantine ./install.sh
+```
