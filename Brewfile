@@ -19,6 +19,7 @@ brew "zsh-syntax-highlighting"
 
 # Apps
 cask "appcleaner"
+cask "brave-browser"
 cask "coconutbattery"
 cask "daisydisk"
 cask "imageoptim"

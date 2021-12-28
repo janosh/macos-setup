@@ -1,6 +1,8 @@
 repos:
   - repo: https://github.com/shellcheck-py/shellcheck-py
     hooks:
+        # -x/--external-sources: Allow 'source' outside of FILES
+        args: [-x, --shell=bash]
 
     hooks:
       - id: check-case-conflict
@@ -13,6 +15,8 @@ repos:
       - id: trailing-whitespace
 
     hooks:
+      - id: markdownlint
 
   - repo: https://github.com/codespell-project/codespell
     hooks:
+      - id: codespell
