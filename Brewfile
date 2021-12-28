@@ -27,6 +27,7 @@ cask "mylio"
 cask "nordvpn"
 cask "slack"
 cask "telegram"
+cask "zoom"
 
 # Mac App Store
 mas "Affinity Designer", id: 824171161
