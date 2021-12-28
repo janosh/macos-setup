@@ -2,11 +2,7 @@
 
 # --- Helper functions ---
 
-trap 'exit 0' SIGINT # exit cleanly if aborted with ⌃C
-
-info() {
-  echo "- ${1}"
-}
+trap 'exit 0' SIGINT # exit cleanly if aborted with ⌃c
 
 request() { # Output a message and open an app.
   local message="${1}"
@@ -46,9 +42,9 @@ echo "After running the main install script, this script will help configure the
   - Commands that will change settings without needing intervention.
   - Commands that will require manual interaction.
 
-  The first part will simply output what it is doing (the action itself, not the commands).
+  The 1st part will simply report what it is doing.
 
-  The second part will open the appropriate panels/apps, inform what needs to be done, and pause.
+  The 2nd part will open the appropriate panels/apps, inform what needs to be done, and pause.
   Unless prefixed with the message 'ALL TABS', all changes can be performed in the opened tab.
   After the changes are done, close the app and the script will continue.
 " | sed -E 's/ {2}//'
@@ -62,70 +58,70 @@ else
   sudo --validate
 fi
 
-# --- First part ---
-# More options on http://mths.be/macos.
+# --- 1st part ---
+# More options at http://mths.be/macos.
 
-info 'Expand save panel by default.'
+echo '- Expand save panel by default.'
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
 
-info 'Expand print panel by default'
+echo '- Expand print panel by default'
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 
-info 'Automatically quit printer app once the print jobs complete'
+echo '- Automatically quit printer app once the print jobs complete'
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
-info 'Save to disk (not to iCloud) by default.'
+echo '- Save to disk (not to iCloud) by default.'
 defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 
-info 'Disable smart quotes.'
+echo '- Disable smart quotes.'
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 
-info 'Disable Resume system-wide.'
+echo '- Disable Resume system-wide.'
 defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
 
-info 'Disable the prompt "Are you sure you want to open this application?".'
+echo '- Disable the prompt "Are you sure you want to open this application?".'
 defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSQuaratine -bool false
 
-info 'Disable the Gatekeeper prompt "{appname} cannot be opened because it is from an unidentified developer".'
+echo '- Disable the Gatekeeper prompt "{appname} cannot be opened because it is from an unidentified developer".'
 sudo spctl --master-disable
 
-info 'Prevent Gatekeeper from re-enabling itself after 30 days.'
+echo '- Prevent Gatekeeper from re-enabling itself after 30 days.'
 # Changes System Preferences > Security & Privacy > General > Allow apps downloaded from.
 sudo defaults write /Library/Preferences/com.apple.security GKAutoRearm -bool false
 
-info 'Prevent Safari from auto-opening "safe" files after download.'
+echo '- Prevent Safari from auto-opening "safe" files after download.'
 defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
 
-info 'Set Help Viewer windows to non-floating mode.'
+echo '- Set Help Viewer windows to non-floating mode.'
 defaults write com.apple.helpviewer DevMode -bool true
 
-info 'Enable full keyboard access for all controls. In particular, enable Tab in modal dialogs.'
+echo '- Enable full keyboard access for all controls. In particular, enable Tab in modal dialogs.'
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
-info 'Trackpad: enable tap to click for this user and for the login screen'
+echo '- Trackpad: enable tap to click for this user and for the login screen'
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-info 'Trackpad: map bottom right corner to right-click'
+echo '- Trackpad: map bottom right corner to right-click'
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -bool true
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
 
-info 'Set Home as the default location for new Finder windows.'
+echo '- Set Home as the default location for new Finder windows.'
 defaults write com.apple.finder NewWindowTarget -string 'PfLo'
 defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
 
-info 'Show all filename extensions in Finder.'
+echo '- Show all filename extensions in Finder.'
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
-info 'Disable the warning when changing a file extension.'
+echo '- Disable the warning when changing a file extension.'
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
-info 'Use columns view in all Finder windows by default.'
+echo '- Use columns view in all Finder windows by default.'
 # Four-letter codes for the other view modes: 'icnv', 'Nlsv', 'Flwv'
 defaults write com.apple.finder FXPreferredViewStyle -string 'clmv'
 
@@ -152,20 +148,25 @@ sed -i '' -E 's/#?macosx-icon-change=1/macosx-icon-change=0/' ~/Library/Preferen
 sed -i '' -E "s|#?snapshot-path=.*|snapshot-path=$HOME/Desktop/|" ~/Library/Preferences/org.videolan.vlc/vlcrc
 sed -i '' -E 's/#?snapshot-format=.*/snapshot-format=jpg/' ~/Library/Preferences/org.videolan.vlc/vlcrc
 
-# Install iTerm dynamic profile.
-mkdir -p ~/Library/Application\ Support/iTerm2/DynamicProfiles \
-  && ln dotfiles/iterm-profile.json ~/Library/Application\ Support/iTerm2/DynamicProfiles
+# Install iTerm dynamic profile. All the settings in 'Keyboard Map' correspond to
+# the 'Natural Text Editing' preset.
+mkdir -p ~/Library/Application\ Support/iTerm2/DynamicProfiles
+ln -f dotfiles/iterm-profile.json ~/Library/Application\ Support/iTerm2/DynamicProfiles
 # Make custom profile the default.
 defaults write com.googlecode.iterm2 "Default Bookmark Guid" "73964F77-3452-4112-BE05-8A8F1ED9B50D"
 
-for app in 'Dock' 'Finder'; do
-  killall "${app}" &> /dev/null
+# Disable hot corners.
+for corner in tl tr br bl; do
+  defaults write com.apple.dock "wvous-$corner-corner" -int 0
 done
 
-info 'Enable OS dark mode.'
+# restart Dock and Finder for above 'defaults write' changes to take effect.
+killall Dock Finder
+
+echo '- Enable OS dark mode.'
 osascript -e 'tell application "System Events" to tell appearance preferences to set properties to {dark mode:true}'
 
-# --- Second part ---
+# --- 2nd part ---
 # Find values for System Preferences by opening the desired pane and running the following AppleScript:
 # tell application "System Preferences" to return anchors of current pane
 
@@ -179,7 +180,10 @@ preferences_pane 'com.apple.preferences.Bluetooth'
 request_preferences 'Add Bluetooth peripherals and show Bluetooth in menu bar.'
 
 preferences_pane 'com.apple.preference.trackpad'
-request_preferences 'ALL TABS: Set Trackpad preferences.'
+request_preferences 'Set Trackpad preferences.'
+
+preferences_pane 'com.apple.preference.mouse'
+request_preferences 'Set Mouse preferences.'
 
 preferences_pane_anchor 'Mouse' 'com.apple.preference.universalaccess'
 request_preferences 'Under "Trackpad Options…", enable three finger drag.'
@@ -198,3 +202,6 @@ request_preferences 'Turn off Guest User account.'
 
 preferences_pane 'com.apple.preference.printfax'
 request_preferences 'Add printers.'
+
+preferences_pane 'com.apple.preference.security'
+request_preferences 'Set delay after sleep before prompting for password on wake.'

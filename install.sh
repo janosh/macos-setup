@@ -2,10 +2,10 @@
 
 install() {
   # Source all install scripts.
-  source install_steps/1_setup.sh
-  source install_steps/2_apps.sh
-  source install_steps/3_config.sh
-  source install_steps/4_cleanup.sh
+  source setup-steps/1-setup.sh
+  source setup-steps/2-apps.sh
+  source setup-steps/3-config.sh
+  source setup-steps/4-cleanup.sh
 
   caffeinate & # Prevent computer from going to sleep during setup.
   ask_details

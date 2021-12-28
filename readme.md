@@ -23,7 +23,7 @@ Or, if you've already cloned the repo locally, simply run:
 To customize OS settings and complete the setup, run:
 
 ```sh
-zsh -c "$(curl -sSL 'https://raw.github.com/janosh/setup/main/postInstall.sh')"
+zsh -c "$(curl -sSL 'https://raw.github.com/janosh/setup/main/post-install.sh')"
 ```
 
 ## Organization
@@ -34,7 +34,7 @@ The important files in this repo are:
 .
 ├── install.sh
 ├── scripts/*
-└── postInstall.sh
+└── post-install.sh
 ```
 
 `./scripts` holds the shell scripts. Containing only functions, none of them will do anything if run on their own. `install.sh` brings them together by sourcing all functions and running them in sequence.

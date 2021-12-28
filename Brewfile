@@ -41,6 +41,7 @@ cask "transmission"
 cask "visual-studio-code"
 cask "vlc"
 cask "zotero"
+cask "zoom"
 
 # Mac App Store
 mas "1Password", id: 443987910

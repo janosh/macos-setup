@@ -10,20 +10,16 @@ configure_zsh() {
 }
 
 configure_git() {
-  # Make root directory user-writeable until restart. Required for next command.
-  sudo mount -uw /
-  # Remove Apple-pre-installed git (ensures newer brew-installed git is used instead).
-  sudo rm /usr/bin/git
-
   # Configure git username.
-  git config --global user.name "${GIT_NAME}"
+  git config --global user.name "${FULLNAME}"
   # Authenticate with GitHub.
-  git config --global user.email "${GITHUB_EMAIL}"
-  git config --global github.user "${GITHUB_USERNAME}"
+  git config --global user.email "${EMAIL}"
+  git config --global github.user "${GITHUB_HANDLE}"
   git config --global credential.helper osxkeychain
 
   # Hard-link global gitignore file into default location.
-  ln dotfiles/git-global-ignore ~/.config/git/ignore
+  mkdir -p ~/.config/git
+  ln -f dotfiles/git-global-ignore ~/.config/git/ignore
 
   # Use VSCode as git editor (e.g. for interactive rebase sessions).
   git config --global core.editor "code --wait"
@@ -42,20 +38,7 @@ configure_git() {
   git config --global pull.ff only # fast-forward only
 }
 
-symlink_custom_scripts() {
-  # uses symbolic link to be able to resolve local .env file holding iLovePDF API key via os.readlink()
-  ln -s "$(pwd)/scripts/ilove_pdf_compress" /usr/local/bin
-}
-
 configure_ssh() {
-  renew_sudo
-
-  # Disable locale environment variable forwarding to remote machine.
-  # This avoids 'bash: warning: setlocale: LC_CTYPE: cannot change locale' when ssh'ing into
-  # server with different locale settings. See https://askubuntu.com/a/144448.
-  # -i '': Edit file in place with no backup.
-  sudo sed -i '' '/SendEnv LANG LC_\*/ s/^#*/#/' /etc/ssh/ssh_config
-
   mkdir -p ~/.ssh
-  ln dotfiles/ssh_config ~/.ssh/config
+  ln -f dotfiles/ssh_config ~/.ssh/config
 }

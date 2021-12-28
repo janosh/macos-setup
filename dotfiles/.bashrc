@@ -59,12 +59,17 @@ export FW_CONFIG_FILE=/home/jr769/rds/hpc-work/dielectric-frontier/fireworks_con
 
 # https://superuser.com/a/686293 (see link in 2nd comment)
 if [[ $- == *i* ]]; then  # check if running in interactive shell that supports line editing
+
     # For interactive shells, enable key bindings for up/down arrow search through history
     # from https://unix.stackexchange.com/a/20830
     bind '"\e[A": history-search-backward'
     bind '"\e[B": history-search-forward'
     bind '"\eOA": history-search-backward'
     bind '"\eOB": history-search-forward'
+
+    # enable alt + right/left arrow to move one word
+    bind '"\e\e[D": backward-word'
+    bind '"\e\e[C": forward-word'
 
     if [ "$PWD" = "$HOME" ]; then
         cd ~/rds/hpc-work || return
