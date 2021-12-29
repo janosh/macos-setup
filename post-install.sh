@@ -59,17 +59,17 @@ else
 fi
 
 # --- 1st part ---
-# More options at http://mths.be/macos.
+# More options at https://github.com/mathiasbynens/dotfiles/blob/main/.macos.
 
 echo '- Expand save panel by default.'
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
 defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
 
-echo '- Expand print panel by default'
+echo '- Expand print panel by default.'
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
 defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
 
-echo '- Automatically quit printer app once the print jobs complete'
+echo '- Automatically quit printer app once the print jobs complete.'
 defaults write com.apple.print.PrintingPrefs "Quit When Finished" -bool true
 
 echo '- Save to disk (not to iCloud) by default.'
@@ -100,12 +100,12 @@ defaults write com.apple.helpviewer DevMode -bool true
 echo '- Enable full keyboard access for all controls. In particular, enable Tab in modal dialogs.'
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
-echo '- Trackpad: enable tap to click for this user and for the login screen'
+echo '- Trackpad: enable tap to click for this user and for the login screen.'
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
 defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-echo '- Trackpad: map bottom right corner to right-click'
+echo '- Trackpad: map bottom right corner to right-click.'
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2
 defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -bool true
 defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
@@ -121,9 +121,39 @@ defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 echo '- Disable the warning when changing a file extension.'
 defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
+echo '- In Finder searches, search the current folder by default.'
+defaults write com.apple.finder FXDefaultSearchScope -string "SCcf"
+
+echo '- Show path bar at bottom edge of Finder windows.'
+defaults write com.apple.finder ShowPathbar -bool true
+
+echo '- Avoid creating .DS_Store files on network or USB volumes.'
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+echo '- Disable disk image verification.'
+defaults write com.apple.frameworks.diskimages skip-verify -bool true
+defaults write com.apple.frameworks.diskimages skip-verify-locked -bool true
+defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
+
+echo '- Do not show recent applications in Dock.'
+defaults write com.apple.dock show-recents -bool false
+
+echo '- Copy email addresses as foo@bar.com instead of Foo Bar <foo@bar.com> in Mail.app.'
+defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
+
+echo '- Disable inline mail attachments (just show the icons).'
+defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
+
 echo '- Use columns view in all Finder windows by default.'
 # Four-letter codes for the other view modes: 'icnv', 'Nlsv', 'Flwv'
 defaults write com.apple.finder FXPreferredViewStyle -string 'clmv'
+
+echo '- Disable box shadow around screenshots of windows.'
+defaults write com.apple.screencapture disable-shadow -bool true
+
+echo '- Disable showing screenshots as floating thumbnails before saving as file.'
+defaults write com.apple.screencapture show-thumbnail -bool FALSE
 
 # Change default file associations (requires restart).
 # See https://apple.stackexchange.com/a/123834.

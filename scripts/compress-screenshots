@@ -1,8 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
-# used with macOS Automator Folder Actions when screenshots are added to ~/Desktop
-# remember to pass inputs as arguments!
-# brew install pngquant zopfli
+# Save this script as a new 'Compress Screenshots.workflow' folder action
+# watching '~/Desktop' (remember to pass inputs as arguments!), then spin it
+# up with 'Folder Actions Setup.app'
+
+# Requires: brew install pngquant zopfli
 
 # view syslog stream with
 # log stream --info --debug --predicate 'process == "syslog"'
