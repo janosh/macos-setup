@@ -78,7 +78,7 @@ defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
 echo '- Disable smart quotes.'
 defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
 
-echo '- Disable Resume system-wide.'
+echo'- Disable Resume after reboot system-wide.'
 defaults write com.apple.systempreferences NSQuitAlwaysKeepsWindows -bool false
 
 echo '- Disable the prompt "Are you sure you want to open this application?".'
@@ -155,6 +155,16 @@ defaults write com.apple.screencapture disable-shadow -bool true
 echo '- Disable showing screenshots as floating thumbnails before saving as file.'
 defaults write com.apple.screencapture show-thumbnail -bool FALSE
 
+echo '- Set languages and metric units.'
+defaults write NSGlobalDomain AppleLanguages -array "en_US" "de_DE"
+defaults write NSGlobalDomain AppleMetricUnits -bool true
+
+echo '- Show language menu in the top right corner of the boot screen.'
+sudo defaults write /Library/Preferences/com.apple.loginwindow showInputMenu -bool true
+
+echo '- Disable the "Are you sure you want to open this application?" dialog.'
+defaults write com.apple.LaunchServices LSQuarantine -bool false
+
 # Change default file associations (requires restart).
 # See https://apple.stackexchange.com/a/123834.
 set_file_association net.daringfireball.markdown com.microsoft.vscode
@@ -164,37 +174,37 @@ set_file_association public.html com.google.chrome
 # /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework\
 # /Versions/A/Support/lsregister -kill -r -domain local -domain system -domain user
 
-# Customize VLC settings
+echo 'Customize VLC settings'
 # Ensure the settings file exists (not created on install but on launch)
 # by calling vlc with an invalid value for the interface option.
 # Does nothing except create and populate the file
 # ~/Library/Preferences/org.videolan.vlc/vlcrc
 vlc -I none
-# Enable dark mode and disable icon changes (like Christmas icon).
+echo '- Enable dark mode.'
 sed -i '' -E 's/#?macosx-interfacestyle=0/macosx-interfacestyle=1/' ~/Library/Preferences/org.videolan.vlc/vlcrc
+echo '- Disable icon changes (like Christmas icon).'
 sed -i '' -E 's/#?macosx-icon-change=1/macosx-icon-change=0/' ~/Library/Preferences/org.videolan.vlc/vlcrc
 # use sed with double quotes for variable replacement and pipe as separator
 # since variable contains forward slashes (https://askubuntu.com/a/508174)
+echo '- Set ~/Desktop as snapshot save location.'
 sed -i '' -E "s|#?snapshot-path=.*|snapshot-path=$HOME/Desktop/|" ~/Library/Preferences/org.videolan.vlc/vlcrc
+echo '- Set JPG as snapshot file type.'
 sed -i '' -E 's/#?snapshot-format=.*/snapshot-format=jpg/' ~/Library/Preferences/org.videolan.vlc/vlcrc
 
-# Install iTerm dynamic profile. All the settings in 'Keyboard Map' correspond to
-# the 'Natural Text Editing' preset.
+echo 'Install iTerm dynamic profile.'
+# All the settings in 'Keyboard Map' correspond to the 'Natural Text Editing' preset.
 mkdir -p ~/Library/Application\ Support/iTerm2/DynamicProfiles
 ln -f dotfiles/iterm-profile.json ~/Library/Application\ Support/iTerm2/DynamicProfiles
-# Make custom profile the default.
+echo '- Make custom profile the default.'
 defaults write com.googlecode.iterm2 "Default Bookmark Guid" "73964F77-3452-4112-BE05-8A8F1ED9B50D"
 
-# Disable hot corners.
+echo 'Disable hot corners.'
 for corner in tl tr br bl; do
   defaults write com.apple.dock "wvous-$corner-corner" -int 0
 done
 
 # restart Dock and Finder for above 'defaults write' changes to take effect.
 killall Dock Finder
-
-echo '- Enable OS dark mode.'
-osascript -e 'tell application "System Events" to tell appearance preferences to set properties to {dark mode:true}'
 
 # --- 2nd part ---
 # Find values for System Preferences by opening the desired pane and running the following AppleScript:
