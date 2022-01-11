@@ -31,6 +31,7 @@ cask "zoom"
 
 # Mac App Store
 mas "Affinity Designer", id: 824171161
+mas "Compressor", id: 424390742
 mas "Final Cut Pro", id: 424389933
 mas "MoneyMoney", id: 872698314
 mas "Yoink", id: 457622435

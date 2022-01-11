@@ -1,0 +1,21 @@
+[user]
+	name = Janosh Riebesell
+	email = janosh.riebesell@gmail.com
+
+[github]
+	user = janosh
+
+[credential]
+	helper = osxkeychain
+[core]
+
+[rebase]
+	autoStash = true
+	autoSquash = true
+
+[push]
+	followTags = true
+
+[pull]
+	ff = only
+	rebase = true
