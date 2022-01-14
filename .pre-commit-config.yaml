@@ -14,8 +14,12 @@ repos:
       - id: mixed-line-ending
       - id: trailing-whitespace
 
+  - repo: https://github.com/igorshubovych/markdownlint-cli
     hooks:
       - id: markdownlint
+        # MD013: line too long
+        # MD033: no inline HTML
+        # MD041: first line in a file should be a top-level heading
 
   - repo: https://github.com/codespell-project/codespell
     hooks:
