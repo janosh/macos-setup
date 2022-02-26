@@ -35,9 +35,14 @@ def compress_jpg(file: str) -> None:
 
 
 os.environ["PATH"] += ":/opt/homebrew/bin"
+clis = [which(x) for x in ("pngquant", "mogrify", "zopflipng")]
 
+pngquant, mogrify, zopflipng = clis
 
 try:
+    for cli in clis:
+        if cli is None:
+            raise ImportError(f"Missing required binary: {cli}")
 
         ext = os.path.splitext(file)[1]
         if ext.lower() != ext and ext.lower() in EXTS:
