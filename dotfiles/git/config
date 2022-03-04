@@ -11,6 +11,7 @@
 # 	helper = store
 
 [core]
+	attributesfile = ~/.config/git/attributes
 
 [rebase]
 	autoStash = true

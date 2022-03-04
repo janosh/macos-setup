@@ -3,6 +3,7 @@ import sys
 import traceback
 from os.path import basename, expanduser
 from shutil import which
+from subprocess import run
 
 from PIL import Image
 
@@ -24,6 +25,9 @@ def compress_png(file: str) -> None:
 
     # set check=False to not raise on non-zero exit code as pngquant returns code
     # 98/99 if processed file is not smaller
+    run(
+        check=False,
+        capture_output=True,
     )
 
 

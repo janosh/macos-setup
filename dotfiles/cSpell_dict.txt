@@ -387,6 +387,7 @@ mkdir
 MNDO
 MNIST
 moduli
+molplotly
 mongodb
 Monkhorst
 monoaluminate
@@ -413,6 +414,7 @@ NELMDL
 neovim
 NERSC
 netlify
+niobate
 nolas
 npmignore
 nullability
@@ -494,6 +496,7 @@ Pycharm
 pydocstyle
 pylint
 pymatgen
+pymatviz
 pymongo
 pyplot
 pyrochlore
@@ -646,6 +649,7 @@ transdisciplinary
 transitionary
 translationally
 transpiled
+transpiling
 triaged
 triaging
 trimodal
@@ -689,6 +693,8 @@ Vercel
 Viridis
 virtualenv
 vite
+vitest
+Vitest
 volker
 Voronoi
 waals
