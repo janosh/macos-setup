@@ -4,10 +4,12 @@
 brew "ffmpeg"
 brew "gh"
 brew "git"
+brew "jq"
 brew "imagemagick"
 brew "mas" # required to install Mac App Store apps below
 brew "node"
 brew "pngquant"
+brew "python"
 brew "rename"
 brew "rsync"
 brew "shellcheck"
