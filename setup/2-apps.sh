@@ -1,3 +1,4 @@
+#!/bin/bash
 
 brew_install() {
   renew_sudo

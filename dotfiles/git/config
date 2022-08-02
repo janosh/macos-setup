@@ -19,6 +19,8 @@
 
 [push]
 	followTags = true
+	# https://git-scm.com/docs/git-config#Documentation/git-config.txt-pushautoSetupRemote
+	autoSetupRemote = true
 
 [pull]
 	ff = only
