@@ -22,6 +22,7 @@ def main(
     write_file_map: bool = False,
     on_error: Literal["raise", "print", "ignore"] = "raise",
 ) -> int:
+        raise ValueError("No input files received")
 
     in_out_map: dict[str, str] = {}
 
@@ -49,6 +50,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("source_files", nargs="+", help="Video files to be compressed")
+        *("-o", "--outdir"),
         help="Output directory where compressed files will be created. New files will "
         "have the same basename as the original file.",
     )
@@ -64,6 +66,10 @@ if __name__ == "__main__":
         help="What to do if an error occurs. If 'raise', will exit non-zero. If "
         "'print' will print error to stderr, then continue with next file. If "
         "'ignore' directly continues with next file.",
+    )
+    parser.add_argument(
+        *("-q", "--quality"),
+        type=int,
     )
     args = parser.parse_args()
 
