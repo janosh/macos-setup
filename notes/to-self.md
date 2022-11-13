@@ -1,3 +1,4 @@
+# Notes to self
 
 ## When having lost work in VS Code
 

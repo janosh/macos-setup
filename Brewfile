@@ -9,6 +9,7 @@ brew "imagemagick"
 brew "mas" # required to install Mac App Store apps below
 brew "node"
 brew "pngquant"
+brew "pnpm"
 brew "python"
 brew "rename"
 brew "rsync"
