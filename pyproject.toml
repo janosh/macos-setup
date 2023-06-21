@@ -1,0 +1,6 @@
+[tool.ruff]
+line-length = 95
+ignore = [
+]
+pydocstyle.convention = "google"
+isort.split-on-trailing-comma = false

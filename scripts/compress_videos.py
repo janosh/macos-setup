@@ -4,6 +4,9 @@ import os
 import subprocess
 import sys
 
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 __author__ = "Janosh Riebesell"
 __date__ = "2022-07-04"
 
@@ -32,6 +35,7 @@ def main(
         except Exception as exc:
             if on_error == "raise":
                 raise
+            if on_error == "print":
         in_out_map[file_path] = out_path
 
     if write_file_map:

@@ -23,11 +23,17 @@ EXTS = (".png", ".jpg", ".jpeg")
 
 
 def compress_png(file: str) -> None:
+    """Compress a PNG file using pngquant, mogrify and zopflipng.
+
+    Args:
+        file (str): Path to PNG file.
+    """
     # don't move file inside ''.split() so as not to split on spaces in filename
 
     # set check=False to not raise on non-zero exit code as pngquant returns code
     # 98/99 if processed file is not smaller
     run(
+        [*f"{pngquant} 32 --skip-if-larger --ext .png --force".split(), file],
         check=False,
         capture_output=True,
     )
@@ -36,6 +42,11 @@ def compress_png(file: str) -> None:
 
 
 def compress_jpg(file: str) -> None:
+    """Compress a JPG file using Pillow.
+
+    Args:
+        file (str): Path to JPG file.
+    """
     img = Image.open(file)
     img.save(file, quality=75, optimize=True)
 
@@ -61,4 +72,5 @@ try:
         compress_png(file) if file.lower().endswith(".png") else compress_jpg(file)
         os.rename(file, f"{HOME}/Downloads/{basename(file)}")
 
+    with open(f"{HOME}/Downloads/compress-screenshot.log", "a") as logs:
         PATH = os.environ["PATH"]
