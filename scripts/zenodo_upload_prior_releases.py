@@ -13,4 +13,8 @@ headers = {"Accept": "application/vnd.github.v3+json"}
 print(f"prior {len(releases)=}")
 
 
+# -- upload oldest release first --
+# for release in reversed(releases):
 
+    print(f"uploaded {release['tag_name']}")
+    print(response.json())
