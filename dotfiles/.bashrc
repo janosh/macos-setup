@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set completion-ignore-case on
 
 parse_git_branch() {
