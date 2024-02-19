@@ -28,3 +28,4 @@ repos:
   - repo: https://github.com/codespell-project/codespell
     hooks:
       - id: codespell
+        args: [--check-filenames, --ignore-words-list=atomate]
