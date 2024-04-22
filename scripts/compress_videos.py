@@ -23,10 +23,20 @@ DIRNAME = os.path.dirname(__file__)
 
 def main(
     source_files: Sequence[str],
+    outdir: str | None = None,
+    suffix: str | None = None,
     write_file_map: bool = False,
     on_error: Literal["raise", "print", "ignore"] = "raise",
 ) -> int:
         raise ValueError("No input files received")
+        raise ValueError("Either outdir or suffix must be provided")
+
+    if outdir:
+        if os.path.isfile(outdir):
+            raise ValueError(
+                f"{outdir=} must be a (possibly non-existent) directory, not a file"
+            )
+        os.makedirs(outdir, exist_ok=True)
 
     in_out_map: dict[str, str] = {}
 
@@ -55,9 +65,16 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument("source_files", nargs="+", help="Video files to be compressed")
+
+    out_group = parser.add_mutually_exclusive_group()
+    out_group.add_argument(
         *("-o", "--outdir"),
         help="Output directory where compressed files will be created. New files will "
         "have the same basename as the original file.",
+    )
+    out_group.add_argument(
+        *("-s", "--suffix"),
+        help="Suffix to append to the original filename to create the output filename. "
     )
     parser.add_argument(
         "--write-file-map",
