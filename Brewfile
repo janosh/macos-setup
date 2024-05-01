@@ -33,6 +33,7 @@ cask "rectangle"
 cask "slack"
 cask "telegram"
 cask "zoom"
+cask "zotero"
 
 # Mac App Store
 mas "Affinity Designer", id: 824171161
