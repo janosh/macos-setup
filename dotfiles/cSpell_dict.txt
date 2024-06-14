@@ -12,6 +12,7 @@ algolia
 algolia's
 algoliasearch
 Alignn
+Aliovalent
 allowfullscreen
 altenkirch
 AMSET
@@ -146,6 +147,7 @@ CNNs
 cobordism
 codespell
 codeworks
+codopant
 coeff
 coldfusion
 collinearity
@@ -614,6 +616,7 @@ MPNN
 MPNNs
 msnbc
 msonable
+Mulliken
 multigraphs
 multimodality
 multinomial
@@ -759,6 +762,7 @@ preselection
 pretrained
 pretraining
 prismjs
+promolecular
 Promotionsförderung
 Protos
 pseudopotential
@@ -1090,6 +1094,7 @@ Weickenmeier
 weigand
 Weng
 wetterich
+Wiberg
 wiedemann
 winton
 wrenformer
