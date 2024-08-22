@@ -84,6 +84,8 @@ BIOACID
 biogeochemists
 bioinformatics
 Blanco
+blickrichtung
+blickrichtungen
 bloch
 BMBF
 bnns
@@ -105,6 +107,7 @@ Broyden
 BSON
 bucher
 bundesvorstand
+burnin # codespell:ignore
 Cahill's
 calabi
 callability
@@ -149,6 +152,8 @@ codespell
 codeworks
 codopant
 coeff
+coercivity
+coincidents
 coldfusion
 collinearity
 colorscales
@@ -184,6 +189,7 @@ covariate
 Covid
 crystallinity
 crystaltoolkit
+Csanyi
 Cubuk
 cuda
 cuprate
@@ -410,6 +416,7 @@ Heuslers
 hexbin
 higgs
 himem
+Hirshfeld
 hmc's
 Hohenberg
 homonuclear
@@ -462,6 +469,7 @@ instantsearch
 integrand
 integro
 interactor
+interconverting
 interlayer
 Intermetallic
 intermetallics
@@ -499,6 +507,7 @@ judgements
 jupyter
 Jupyter
 jürgen
+Kaplan
 karpathy
 katex
 keras
@@ -521,6 +530,7 @@ kurzweil
 kwargs
 LAMMPS
 Langevin
+lanthanoid
 lanthanoids
 latexify
 lbfgs
@@ -536,6 +546,7 @@ linewidth
 lithiated
 liveshare
 LMAXMIX
+Lobsterpy
 LORBIT
 Louizos
 LSTM
@@ -545,6 +556,7 @@ magmom
 magmoms
 magnetizations
 Magnetocaloric
+magnetocrystalline
 magnetoelectric
 Magnetoresistance
 magpy
@@ -573,6 +585,7 @@ matplotlib
 Matscholar
 Matsci
 matsubara
+Mauguin
 mcmc
 mdsvex
 megnet
@@ -736,6 +749,7 @@ PNPM
 Poirier
 Pokedex
 pokémons
+polyanions
 polycrystallinity
 polydisperse
 polyfill
@@ -833,6 +847,7 @@ rerender
 rerenders
 Researchgate
 retrosynthesis
+Reuss
 revtex
 rgba
 rhombohedra
@@ -856,6 +871,7 @@ Rokas
 roostformer
 Roostformer
 Rosen
+rotamers
 rsync
 rtgs
 Rydbergs
@@ -922,6 +938,7 @@ studienstiftung's
 stylesheet
 subcategorize
 subclassing
+subfig
 sublattice
 subnavs
 suboptimally
@@ -943,6 +960,7 @@ Supercon
 superhard
 superionic
 superlattices
+superoxide
 superoxides
 superparamagnetism
 Surfverhalten
@@ -966,6 +984,7 @@ sythesizable
 szymanski
 TAATA
 Taliarte
+tanimoto
 TECs
 TEGs
 telluride
@@ -1031,6 +1050,7 @@ underpredicts
 undersampled
 undisplaced
 undoped
+unhashable
 uniaxially
 unintuitive
 unitless
@@ -1057,6 +1077,7 @@ Ununpentium
 Ununquadium
 Ununseptium
 Ununtrium
+upstreamed
 VAEs
 variadic
 variationally
@@ -1087,6 +1108,7 @@ voxelized
 waals
 walltime
 wandb
+wasserstein
 WAVECAR
 wavefunction
 wavefunctions
@@ -1120,6 +1142,7 @@ youtube
 yscale
 Yunwei
 zcat
+Zenodo
 zepto
 Zetta
 Zhong

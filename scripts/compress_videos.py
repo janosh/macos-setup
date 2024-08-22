@@ -40,6 +40,7 @@ def main(
 
     in_out_map: dict[str, str] = {}
 
+    for idx, file_path in enumerate(source_files, start=1):
 
         try:
         except Exception as exc:
