@@ -5,6 +5,7 @@ install() {
 
   brew_install
 
+  configure_macos
 
   brew cleanup
 }
