@@ -38,7 +38,9 @@ def compress_png(file: str) -> None:
         capture_output=True,
     )
 
+    run([*f"{mogrify} -resize '2000>'".split(), file], capture_output=True, check=False)
 
+    run([*f"{zopflipng} -y".split(), file, file], capture_output=True, check=False)
 
 
 def compress_jpg(file: str) -> None:
@@ -74,3 +76,4 @@ try:
 
     with open(f"{HOME}/Downloads/compress-screenshot.log", "a") as logs:
         PATH = os.environ["PATH"]
+        logs.write(f"{now:%H:%M:%S}\n{sys.executable=}\n{PATH=}\n{traceback.format_exc()}\n")

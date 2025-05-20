@@ -6,3 +6,9 @@
 
 t.py
 tmp/
+
+# code editor config
+.vscode
+
+# secrets
+.env

@@ -2,6 +2,7 @@ default_install_hook_types: [pre-commit, commit-msg]
 
 repos:
   - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
     hooks:
       - id: shellcheck
         # docs: https://github.com/koalaman/shellcheck/wiki
@@ -24,8 +25,15 @@ repos:
         # MD013: line too long
         # MD033: no inline HTML
         # MD041: first line in a file should be a top-level heading
+        args: [--disable, MD013, MD033, MD041, '--']
 
   - repo: https://github.com/codespell-project/codespell
     hooks:
       - id: codespell
+        stages: [pre-commit, commit-msg]
         args: [--check-filenames, --ignore-words-list=atomate]
+
+  - repo: https://github.com/crate-ci/typos
+    hooks:
+      - id: typos
+        types: [text]

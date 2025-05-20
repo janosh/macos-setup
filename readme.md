@@ -1,3 +1,4 @@
+# macOS Setup Automation
 
 ## Purpose
 
