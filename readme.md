@@ -14,6 +14,8 @@
 ```sh
 ```
 
+**New Mac Setup Note:**
+
 ## Organization
 
 ```text
