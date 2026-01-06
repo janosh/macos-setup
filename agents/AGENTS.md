@@ -1,0 +1,34 @@
+# Global Agent Instructions
+
+
+## Python Projects (*.py, pyproject.toml)
+
+- Always add typing annotations to functions and classes, including return types
+- Add descriptive docstrings to all functions and classes
+- Don't add shebangs (no `#!/usr/bin/env python`)
+- Use `pytest` for testing, never `unittest`
+- All tests go in `./tests` with concise single-line docstrings
+- Use `pytest.mark.parametrize()` to cover multiple parameter values
+- Prefer `os.path.isfile/isdir` over `os.path.exists`
+- Use f-strings for paths, not `os.path.join()`
+- Prefer `os.path` over `pathlib.Path` (except with `tmp_path` fixture)
+- Use `ty` for type checking, never `mypy`, `pyright`, or others
+
+
+- Use snake_case for variables and functions, not camelCase
+- Use `it.each([...])` and `test.each([...])` for parameterized vitest tests
+- In CSS/style blocks, don't leave blank lines between rules - the closing `}` is enough separation
+- Keep CSS simple: prefer nested selectors over many classes; inline styles if a class only has 1-2 rules. offer to remove CSS classes that aren't used at all.
+- Prefer [attachments](https://svelte.dev/docs/svelte/@attach) over the legacy [`use:` directive](https://svelte.dev/docs/svelte/use) for actions
+- Avoid `switch` statements, prefer simple `if`/`else` chains
+- `$derived` is writable! Don't use `$state` + `$effect` when `$derived` with later reassignment works
+- Pass Svelte `$state` variables (not plain values) to `bind:`-able props to avoid `state_referenced_locally` warnings. e.g. avoid `x_axis={{ label: 'foo' }}` if `x_axis` is bindable. instead define `let x_axis = $state(label: 'foo')` and pass `bind:x_axis` to component.
+- Destructure props: `const { name, age } = user` over `user.name, user.age` repeatedly
+
+
+
+
+
+## General
+
+- Prefer editing existing files over creating new ones.

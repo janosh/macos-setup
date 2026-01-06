@@ -4,11 +4,15 @@
 # OS files
 .DS_Store
 
+# temporary files
 t.py
 tmp/
+pnpm-workspace.yaml
 
 # code editor config
 .vscode
 
 # secrets
 .env
+
+AGENTS.md
