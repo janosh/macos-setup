@@ -13,6 +13,8 @@
 - Use f-strings for paths, not `os.path.join()`
 - Prefer `os.path` over `pathlib.Path` (except with `tmp_path` fixture)
 - Use `ty` for type checking, never `mypy`, `pyright`, or others
+- **NEVER use `__all__`!** We discourage star imports—they break static analysis of types and imports
+- avoid `typing.cast` unless absolutely necessary
 
 
 - Use snake_case for variables and functions, not camelCase
@@ -23,12 +25,24 @@
 - Avoid `switch` statements, prefer simple `if`/`else` chains
 - `$derived` is writable! Don't use `$state` + `$effect` when `$derived` with later reassignment works
 - Pass Svelte `$state` variables (not plain values) to `bind:`-able props to avoid `state_referenced_locally` warnings. e.g. avoid `x_axis={{ label: 'foo' }}` if `x_axis` is bindable. instead define `let x_axis = $state(label: 'foo')` and pass `bind:x_axis` to component.
+- Never use `any` type! Use `unknown` and narrow, or define proper types
+- Avoid `!` non-null assertions—narrow types instead
 - Destructure props: `const { name, age } = user` over `user.name, user.age` repeatedly
+- Prefer `format_num` from `matterviz` over `.toFixed()` for number formatting (handles SI prefixes, trailing zeros)
+
+
+- Don't commit without being asked
+
+## CRITICAL: Protect Uncommitted Work
 
 
 
-
+- Check with `ls -la` and `file <path>` before deleting—directories may be symlinks to working copies
 
 ## General
 
+- **No single-letter or concatenated variable names!** Use proper snake_case: `idx` not `i`, `n_images` not `nimages`, `f_max` not `fmax`, `col_idx` not `colidx`
+- Log useful context with errors—include relevant variable values
 - Prefer editing existing files over creating new ones.
+- Use single-line section headers: `// === Section Name ===` not verbose multi-line box comments
+- Use `prek` (Rust port), never `pre-commit` (Python)
