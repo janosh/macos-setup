@@ -14,6 +14,8 @@
 - Prefer `os.path` over `pathlib.Path` (except with `tmp_path` fixture)
 - Use `ty` for type checking, never `mypy`, `pyright`, or others
 - **NEVER use `__all__`!** We discourage star imports—they break static analysis of types and imports
+- Use `time.perf_counter()` instead of `time.time()` for wall-time measurements
+- **In `notebooks/`, prefer pymatviz widgets instead: `BarPlotWidget`, `HeatmapMatrixWidget`, `HistogramWidget`, `ScatterPlotWidget`, `StructureWidget`, `ConvexHullWidget`, `TrajectoryWidget`, `PhaseDiagramWidget`, etc. over `plotly` or `matplotlib` figures. Check existing demos/notebooks for usage and API patterns before writing new visualization code.
 - avoid `typing.cast` unless absolutely necessary
 
 
@@ -42,7 +44,10 @@
 ## General
 
 - **No single-letter or concatenated variable names!** Use proper snake_case: `idx` not `i`, `n_images` not `nimages`, `f_max` not `fmax`, `col_idx` not `colidx`
+- **No fallbacks or backward-compatible interfaces** unless explicitly told. Throw an error or fail early—silent catches, default shims, and compatibility wrappers mask bugs.
+- Remove dead code aggressively. Prefer a clean codebase over deprecation.
 - Log useful context with errors—include relevant variable values
 - Prefer editing existing files over creating new ones.
 - Use single-line section headers: `// === Section Name ===` not verbose multi-line box comments
+- **Never commit handover docs, temp data files, or proof-of-concept artifacts** (no `HANDOVER.md`, sample `.jsonl`/`.lmdb` files, exploratory notebooks, etc.). These clutter the monorepo — keep them local or in `tmp/`.
 - Use `prek` (Rust port), never `pre-commit` (Python)
