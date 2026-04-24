@@ -9,6 +9,7 @@ repos:
         # -x/--external-sources: Allow 'source' outside of FILES
         args: [-x, --shell=bash]
 
+  - repo: builtin
     hooks:
       - id: check-case-conflict
       - id: check-symlinks

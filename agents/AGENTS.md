@@ -15,6 +15,7 @@
 - Use `ty` for type checking, never `mypy`, `pyright`, or others
 - **NEVER use `__all__`!** We discourage star imports—they break static analysis of types and imports
 - Use `time.perf_counter()` instead of `time.time()` for wall-time measurements
+- Always prefer `plotly` over `matplotlib` for plotting. When exporting to HTML, always use `include_plotlyjs="cdn"` for much smaller file sizes (3 KB vs 3 MB).
 - **In `notebooks/`, prefer pymatviz widgets instead: `BarPlotWidget`, `HeatmapMatrixWidget`, `HistogramWidget`, `ScatterPlotWidget`, `StructureWidget`, `ConvexHullWidget`, `TrajectoryWidget`, `PhaseDiagramWidget`, etc. over `plotly` or `matplotlib` figures. Check existing demos/notebooks for usage and API patterns before writing new visualization code.
 - avoid `typing.cast` unless absolutely necessary
 
@@ -39,6 +40,7 @@
 
 
 
+- If you need a clean working tree for your task, use `git worktree add` instead of stashing
 - Check with `ls -la` and `file <path>` before deleting—directories may be symlinks to working copies
 
 ## General
