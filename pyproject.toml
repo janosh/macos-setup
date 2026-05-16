@@ -1,6 +1,20 @@
 [tool.ruff]
 line-length = 95
+
+[tool.ruff.lint]
+select = ["ALL"]
 ignore = [
+  "C901",    # allow complex functions
+  "COM812",  # missing-trailing-comma (conflicts with ruff formatter)
+  "D205",    # 1 blank line required between summary and description
+  "EM101",   # allow string literal in exception
+  "EM102",   # allow f-string literal in exception
+  "INP001",  # script dirs are not packages (no __init__.py)
+  "PTH",     # prefer os.path over pathlib per project convention
+  "S603",    # subprocess call with trusted local input
+  "T201",    # allow print in CLI scripts
+  "TRY003",  # allow long messages outside exception class
+  "TRY301",  # allow raise within try block
 ]
 pydocstyle.convention = "google"
 isort.split-on-trailing-comma = false

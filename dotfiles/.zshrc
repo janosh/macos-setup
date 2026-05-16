@@ -1,6 +1,7 @@
 
 # shellcheck disable=SC1091
 
+}
 # Clean stale branches and non-origin remotes.
 # shellcheck disable=SC2086
 grcl() {

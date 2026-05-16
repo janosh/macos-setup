@@ -21,6 +21,7 @@ brew "zsh-history-substring-search"
 brew "zsh-syntax-highlighting"
 
 # Apps
+cask "1password"
 cask "appcleaner"
 cask "brave-browser"
 cask "coconutbattery"

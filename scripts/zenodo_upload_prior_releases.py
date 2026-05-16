@@ -1,3 +1,6 @@
+import os
+import sys
+
 import requests
 
 __date__ = "2022-12-27"
@@ -6,6 +9,10 @@ __date__ = "2022-12-27"
 # https://github.com/zenodo/zenodo/issues/1463#issuecomment-1007602828
 
 repo = "materialsproject/atomate2"  # 2024-02-19
+# Token: query string from Zenodo GitHub hook payload URL (GitHub repo → Settings → Webhooks).
+access_token = os.environ.get("ZENODO_GITHUB_HOOK_TOKEN")
+if not access_token:
+    sys.exit("Set ZENODO_GITHUB_HOOK_TOKEN to the Zenodo hook URL access token")
 
 headers = {"Accept": "application/vnd.github.v3+json"}
 
