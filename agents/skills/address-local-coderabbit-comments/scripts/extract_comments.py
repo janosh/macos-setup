@@ -9,6 +9,8 @@ import os
 import sys
 from typing import Any
 
+type JsonValue = dict[str, JsonValue] | list[JsonValue] | str | int | float | bool | None
+
     "assertive": "assertiveComments",
     "additional": "additionalComments",
     "outsideDiffRange": "outsideDiffRangeComments",
@@ -45,11 +47,13 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def read_json_file(file_path: str) -> JsonValue:
     """Read and parse a JSON file."""
     with open(file_path, encoding="utf-8") as file_handle:
         return json.load(file_handle)
 
 
+def iter_reviews(payload: JsonValue) -> list[dict[str, Any]]:
     """Normalize one payload into a list of review dictionaries."""
     if isinstance(payload, list):
         return [item for item in payload if isinstance(item, dict)]
@@ -114,6 +118,7 @@ def select_review(cache_files: list[str], review_id: str) -> tuple[dict[str, Any
                     return review, cache_file, review_timestamp_epoch(review)
         raise RuntimeError(f"No CodeRabbit review with id '{review_id}' was found.")
 
+    best: tuple[tuple[float, float], dict[str, Any], str] | None = None
     for cache_file in cache_files:
         try:
             payload = read_json_file(cache_file)
@@ -121,7 +126,12 @@ def select_review(cache_files: list[str], review_id: str) -> tuple[dict[str, Any
             continue
         file_mtime = os.path.getmtime(cache_file)
         for review in iter_reviews(payload):
+            score = (review_timestamp_epoch(review), file_mtime)
+            if best is None or score > best[0]:
+                best = (score, review, cache_file)
+    if best is None:
         raise RuntimeError("No CodeRabbit reviews were found for this workspace.")
+    best_score, best_review, best_source_file = best
     return best_review, best_source_file, best_score[0]
 
 

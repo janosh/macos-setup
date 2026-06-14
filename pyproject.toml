@@ -10,6 +10,8 @@ ignore = [
   "EM101",   # allow string literal in exception
   "EM102",   # allow f-string literal in exception
   "INP001",  # script dirs are not packages (no __init__.py)
+  "PLR0912", # too many branches
+  "PLR0913", # too many arguments
   "PTH",     # prefer os.path over pathlib per project convention
   "S603",    # subprocess call with trusted local input
   "T201",    # allow print in CLI scripts

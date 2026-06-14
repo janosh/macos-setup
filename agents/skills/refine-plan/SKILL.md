@@ -1,5 +1,6 @@
 ---
 name: refine-plan
+description: Critique and refine an implementation plan before coding, resolving derivable questions yourself and escalating only genuine unknowns.
 ---
 
 # Refine Implementation Plan
@@ -14,11 +15,15 @@ name: refine-plan
 1. Draft approach: what to build, order, and how pieces connect.
 2. Self-critique for vague steps, missing error handling, unstated assumptions, and unclear dependencies.
 3. List uncertainties (ambiguous requirements, unknown constraints, open design choices).
+5. Ask the user numbered questions for those remaining; wait for answers before coding.
+6. Revise into concrete steps with explicit edge cases and interfaces.
+7. Present the final plan and confirm before implementation.
 
 ## Rules
 
 - Planning only — no implementation code yet.
 - Replace hand-wavy steps with precise actions.
+- Don't ask what you can derive; batch only genuine judgment calls and iterate if answers reveal new gaps.
 
 ## Outcome
 

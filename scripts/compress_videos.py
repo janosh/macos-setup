@@ -1,5 +1,7 @@
+
 from __future__ import annotations
 
+import json
 import os
 import subprocess
 import sys
@@ -25,6 +27,7 @@ def main(
     source_files: Sequence[str],
     outdir: str | None = None,
     suffix: str | None = None,
+    *,
     write_file_map: bool = False,
     on_error: Literal["raise", "print", "ignore"] = "raise",
 ) -> int:
