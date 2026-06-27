@@ -9,6 +9,7 @@ repos:
       - id: ruff-format
         types_or: [python, jupyter]
 
+  - repo: https://github.com/astral-sh/ty-pre-commit
     hooks:
       - id: ty
 
