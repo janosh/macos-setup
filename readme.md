@@ -22,6 +22,7 @@ When setting up new Macs with iCloud "Desktop & Documents" sync enabled, check [
 
 ```text
 .
+├── agents/skills/             # agent skills symlinked into Cursor/Codex/Claude
 ├── notes/                     # personal runbooks (Mac setup, Cursor, etc.)
 ├── setup/                     # macOS bootstrap scripts
 └── scripts/                   # one-off utilities
