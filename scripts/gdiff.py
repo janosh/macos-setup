@@ -15,7 +15,9 @@ from html import escape
 from urllib.request import pathname2url
 
 LineRankRow = tuple[int, int, int, str]
+CommitSummary = tuple[str, int, str]
 ParsedArgs = tuple[str, int, str, str, list[str]]
+CODE_EXT_PATTERN = re.compile(r"\.(?:c|cpp|css|go|html|js|jsx|py|rs|svelte|ts|tsx)")
 ANSI_GREEN = "\033[32m"
 ANSI_RED = "\033[31m"
 ANSI_BLUE = "\033[34m"
@@ -122,7 +124,18 @@ def parse_numstat_rows(numstat_stdout: str, sort_name: str = "n") -> list[LineRa
     """Parse git numstat output into sorted line-rank rows."""
     added_by_file: Counter[str] = Counter()
     removed_by_file: Counter[str] = Counter()
+    records = iter(
+        numstat_stdout.split("\0") if "\0" in numstat_stdout else numstat_stdout.splitlines()
+    )
+    for record in records:
+        try:
+            added_text, removed_text, file_path = record.lstrip("\n").split("\t", 2)
+        except ValueError:
             continue
+        if not file_path:
+            old_path, file_path = next(records), next(records)
+            for line_counts in (added_by_file, removed_by_file):
+                line_counts[file_path] += line_counts.pop(old_path, 0)
         if not added_text.isdigit() or not removed_text.isdigit():
             continue
         added_by_file[file_path] += int(added_text)
@@ -137,6 +150,8 @@ def rows_from_counters(
     sort_name: str = "n",
 ) -> list[LineRankRow]:
     """Return sorted line-rank rows from added and removed counters."""
+    sort_idx = {"n": 0, "a": 1, "r": 2}[sort_name]
+    return sorted(
         [
             (
                 added_by_file[file_path] - removed_by_file[file_path],
@@ -146,6 +161,7 @@ def rows_from_counters(
             )
             for file_path in added_by_file
         ],
+        key=lambda row: (row[sort_idx], row[1], row[3]),
     )
 
 
@@ -157,8 +173,11 @@ def rows_from_counters(
         if arg.startswith(("-", "^")) or ".." in arg:
             normalized_args.append(arg)
             continue
+        if shortcut_match := re.fullmatch(r"(@|HEAD)~\d+", arg):
+            normalized_args.append(f"{arg}..{shortcut_match[1]}")
             continue
         rev_check = subprocess.run(
+            [git_path, "-C", repo, "rev-parse", "--verify", "--quiet", f"{arg}^{{commit}}"],
             check=False,
             capture_output=True,
             text=True,
@@ -176,8 +195,13 @@ def collect_line_rank_rows(
 ) -> list[LineRankRow]:
     """Collect per-file line counts for the requested source."""
     if source_name == "history":
+        history_args = normalize_history_args(repo, git_args)
+        pathspec_idx = history_args.index("--") if "--" in history_args else len(history_args)
+        revision_args = [arg for arg in history_args[:pathspec_idx] if arg != "--reverse"]
+        flags = ["--reverse", "--numstat", "-z", "--find-renames=40%", "--pretty=tformat:"]
         return parse_numstat_rows(
             git_stdout(
+                ["-C", repo, "log", *revision_args, *flags, *history_args[pathspec_idx:]],
             ),
             sort_name,
         )
@@ -235,6 +259,29 @@ def collect_line_rank_rows(
     return rows_from_counters(added_by_file, removed_by_file, sort_name)
 
 
+def commit_summary_lines(
+    commits: Sequence[CommitSummary],
+    max_message_chars: int = 80,
+    max_commit_count: int = 10,
+) -> list[str]:
+    """Format selected commits, abbreviating long messages and commit lists."""
+    if len(commits) <= 1:
+        return []
+    lines = [
+        f"{sha} ({file_count} files) {message[:max_message_chars]}"
+        for sha, file_count, message in commits
+    ]
+    if len(lines) <= max_commit_count:
+        return lines
+    first_count = max_commit_count // 2
+    last_start = len(lines) - max_commit_count + first_count
+    return [
+        *lines[:first_count],
+        f"... ({len(lines) - max_commit_count} more)",
+        *lines[last_start:],
+    ]
+
+
 def line_expr(row: LineRankRow) -> str:
     """Return a compact added/removed/net expression."""
     net, added, removed, _ = row
@@ -252,21 +299,36 @@ def total_row(rows: Sequence[LineRankRow]) -> LineRankRow:
     """Return a total row for displayed rows."""
     added = sum(row[1] for row in rows)
     removed = sum(row[2] for row in rows)
+    return (added - removed, added, removed, "total")
 
 
 def print_table(rows: Sequence[LineRankRow]) -> None:
     """Print rows as an aligned shell table."""
     rows_with_total = [*rows, total_row(rows)]
     width = max(len("lines"), *(len(line_expr(row)) for row in rows_with_total))
+    color_enabled = "FORCE_COLOR" in os.environ or (
+        "NO_COLOR" not in os.environ and sys.stdout.isatty()
+    )
+    green, red, reset = (ANSI_GREEN, ANSI_RED, ANSI_RESET) if color_enabled else ("", "", "")
     print(f"{'lines':>{width}}  file")
     for row in rows_with_total:
         net, added, removed, file_path = row
         line_parts: list[str] = []
         if added:
+            line_parts.append(f"{green}{added:+d}{reset}")
         if removed:
+            line_parts.append(f"{red}-{removed}{reset}")
         if added and removed:
+            color_code = green if net > 0 else red if net < 0 else ""
             net_text = f"{net:+d}"
+            net_text = f"{color_code}{net_text}{reset}" if color_code else net_text
             line_parts.extend(["=", net_text])
+        color_code = (
+            {"code": ANSI_BLUE, "test": ANSI_YELLOW}.get(file_kind(file_path))
+            if color_enabled
+            else ""
+        )
+        file_text = f"{color_code}{file_path}{reset}" if color_code else file_path
         line_text = " " * (width - len(line_expr(row))) + " ".join(line_parts)
         print(f"{line_text}  {file_text}")
 
@@ -283,6 +345,7 @@ def file_kind(file_path: str) -> str:
         return "test"
 
 
+def main(args: Sequence[str] | None = None) -> int:  # noqa: PLR0915
     """Run the git line rank CLI."""
     format_name, limit, sort_name, source_name, git_args = parse_args(
         sys.argv[1:] if args is None else args
@@ -298,11 +361,71 @@ def file_kind(file_path: str) -> str:
     if not rows:
         return 0
 
+    commit_lines: list[str] = []
+        pathspec_idx = history_args.index("--") if "--" in history_args else len(history_args)
+        summary_flags = ["--no-patch", "--shortstat", "--format=%x00%h%x09%s"]
+        summary_args = ["-C", repo, "log", *history_args[:pathspec_idx], *summary_flags]
+        summary_stdout = git_stdout(
+            [*summary_args, *history_args[pathspec_idx:]],
+        )
+        summaries: list[CommitSummary] = []
+        for record in summary_stdout.split("\0")[1:]:
+            sha, message = record.splitlines()[0].split("\t", 1)
+            file_count_match = re.search(r"(\d+) files? changed", record)
+            file_count = int(file_count_match[1]) if file_count_match else 0
+            summaries.append((sha, file_count, message))
+        commit_lines = commit_summary_lines(summaries)
+    if format_name != "html" and commit_lines:
+        print(*commit_lines, sep="\n", end="\n\n")
     if format_name == "table":
         print_table(rows)
     elif format_name == "markdown":
+        print("| Lines | File |")
+        print("| ---: | --- |")
+        for row in [*rows, total_row(rows)]:
+            file_path = row[3]
+            md_file_path = file_path.replace("|", "\\|").replace("`", "&#96;")
+            print(f"| {line_expr(row)} | `{md_file_path}` |")
     else:
         repo_name = os.path.basename(repo)
+        html_row_lines: list[str] = []
+        for net, added, removed, file_path in [*rows, total_row(rows)]:
+            line_parts: list[str] = []
+            if added:
+                line_parts.append(f'<span class="added">{added:+d}</span>')
+            if removed:
+                line_parts.append(f'<span class="removed">-{removed}</span>')
+            if added and removed:
+                net_class = "net-positive" if net > 0 else "net-negative" if net < 0 else ""
+                net_text = f"{net:+d}"
+                net_html = (
+                    f'<span class="{net_class}">{net_text}</span>' if net_class else net_text
+                )
+                line_parts.extend(["=", net_html])
+
+            escaped_file_path = escape(file_path)
+            file_class = file_kind(file_path)
+            class_attr = f' class="{file_class}-file"' if file_class else ""
+            file_cell = f"<code{class_attr}>{escaped_file_path}</code>"
+            if file_path != "total":
+                editor = os.environ.get("VISUAL") or os.environ.get("EDITOR") or "cursor"
+                try:
+                    editor_cmd = os.path.basename(shlex.split(editor)[0])
+                except ValueError:
+                    editor_cmd = os.path.basename(editor)
+                encoded_path = pathname2url(f"{repo}/{file_path}")
+                if editor_cmd in {"cursor", "cursor-insiders"}:
+                    file_url = f"cursor://file{encoded_path}"
+                elif editor_cmd in {"code", "code-insiders"}:
+                    file_url = f"vscode://file{encoded_path}"
+                else:
+                    file_url = "file://" + encoded_path
+                file_cell = f'<a href="{escape(file_url, quote=True)}">{file_cell}</a>'
+            cells = f'<td class="num">{" ".join(line_parts)}</td><td>{file_cell}</td>'
+            html_row_lines.append(f"<tr>{cells}</tr>")
+        html_rows = "\n".join(html_row_lines)
+        commit_text = escape("\n".join(commit_lines))
+        commits_html = f"<h2>Commits</h2>\n<pre>{commit_text}</pre>\n" if commit_text else ""
         with tempfile.NamedTemporaryFile(
         ) as report_file:
             report_path = report_file.name
@@ -319,6 +442,7 @@ def file_kind(file_path: str) -> str:
 <body>
 <h1>Line Rank: <code>{escape(repo_name)}</code></h1>
 <p>Sorted by net lines added over git history. Source: <code>{escape(repo)}</code></p>
+{commits_html}<table>
 <thead>
 <tr>
 <th class="num">Lines</th><th>File</th>

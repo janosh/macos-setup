@@ -10,11 +10,13 @@ import pytest
 
 if spec is None or spec.loader is None:
     raise RuntimeError(f"failed to load module spec for {module_path}")
+GIT_IDENTITY_ARGS = ("-c", "user.name=Test User", "-c", "user.email=test@example.com")
 
 
 @pytest.fixture
 def git_path() -> str:
     """Return the git executable path or skip tests."""
+    if git_path := shutil.which("git"):
         return git_path
     pytest.skip("git is not installed")
 
@@ -29,6 +31,12 @@ def run_git(git_path: str, repo: str, args: list[str]) -> subprocess.CompletedPr
     )
 
 
+def commit_all(git_path: str, repo: str, message: str) -> None:
+    """Stage and commit all changes in a test repository."""
+    run_git(git_path, repo, ["add", "--all"])
+    run_git(git_path, repo, [*GIT_IDENTITY_ARGS, "commit", "-m", message])
+
+
 @pytest.fixture
 def changed_repo(tmp_path: Path, git_path: str) -> str:
     """Create a repo with one staged and one unstaged text change."""
@@ -36,6 +44,7 @@ def changed_repo(tmp_path: Path, git_path: str) -> str:
     run_git(git_path, repo, ["init"])
     (tmp_path / "staged.txt").write_text("old\n", encoding="utf-8")
     (tmp_path / "unstaged.txt").write_text("keep\nremove\n", encoding="utf-8")
+    commit_all(git_path, repo, "initial")
 
     (tmp_path / "staged.txt").write_text("old\nnew staged\n", encoding="utf-8")
     run_git(git_path, repo, ["add", "staged.txt"])
@@ -68,37 +77,115 @@ def test_parse_args_selects_source(
 
 
 def test_parse_numstat_rows_aggregates_text_changes() -> None:
+    """Aggregate text changes, follow renames, and skip binary rows."""
     assert rows == [(4, 5, 1, "a.py")]
+    rename_numstat = (
+        "3\t1\told.py\0\n1\t0\t\0old.py\0new.py\0"
+        "\n-\t-\t\0new.py\0final.py\0\n2\t0\tfinal.py\0"
+    )
 
 
+    tmp_path: Path,
+    git_path: str,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     repo = str(tmp_path)
     run_git(git_path, repo, ["init"])
+    base_history = "".join(f"line {idx:02d}\n" for idx in range(10))
     for history_text, other_text, message in [
+        (base_history, "base\n", "base"),
+        (f"{base_history}one\n", "base\n", "one"),
+        (f"{base_history}one\ntwo\n", "base\ntwo\n", "two"),
     ]:
         (tmp_path / "history.txt").write_text(history_text, encoding="utf-8")
         (tmp_path / "other.txt").write_text(other_text, encoding="utf-8")
+        commit_all(git_path, repo, message)
 
     def history_rows(args: list[str]) -> list[tuple[int, int, int, str]]:
         """Collect history rows from the test repo."""
 
     middle_commit = run_git(git_path, repo, ["rev-parse", "HEAD~1"]).stdout.strip()
+    last_two_commits = [(1, 1, 0, "other.txt"), (2, 2, 0, "history.txt")]
     assert history_rows([middle_commit]) == [(1, 1, 0, "history.txt")]
     assert history_rows(["@~2"]) == last_two_commits
     assert history_rows(["HEAD~2"]) == last_two_commits
+    assert history_rows(["@~2", "--", "history.txt"]) == [(2, 2, 0, "history.txt")]
     assert history_rows(["HEAD"]) == [
         (2, 2, 0, "other.txt"),
+        (12, 12, 0, "history.txt"),
+    ]
+    commit_shas = run_git(git_path, repo, ["log", "-2", "--format=%h"]).stdout.splitlines()
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.delenv("FORCE_COLOR", raising=False)
+    monkeypatch.setenv("NO_COLOR", "1")
+    assert capsys.readouterr().out == (
+        f"{commit_shas[0]} (2 files) two\n"
+        f"{commit_shas[1]} (1 files) one\n"
+        "\n"
+        "lines  file\n"
+        "   +1  other.txt\n"
+        "   +2  history.txt\n"
+        "   +3  total\n"
+    )
+    assert capsys.readouterr().out == (
+        f"{commit_shas[0]} (2 files) two\n"
+        f"{commit_shas[1]} (1 files) one\n\n"
+        "| Lines | File |\n"
+        "| ---: | --- |\n"
+        "| +1 | `other.txt` |\n"
+        "| +2 | `history.txt` |\n"
+        "| +3 | `total` |\n"
+    )
+    run_git(git_path, repo, ["mv", "history.txt", "moved.txt"])
+    unchanged_line_count = 5
+    moved_text = "".join(
+        f"{'line' if idx < unchanged_line_count else 'new-'} {idx:02d}\n" for idx in range(12)
+    )
+    for file_text, message in [
+        (moved_text, "move and rewrite"),
+        (f"{moved_text}final\n", "edit moved file"),
+    ]:
+        (tmp_path / "moved.txt").write_text(file_text, encoding="utf-8")
+        commit_all(git_path, repo, message)
+    assert history_rows(["@~2"]) == [(1, 8, 7, "moved.txt")]
+    expected_rows = [(1, 1, 0, "other.txt"), (2, 9, 7, "moved.txt")]
+    assert history_rows(["@~3"]) == expected_rows
+    assert history_rows(["@~3", "--reverse"]) == expected_rows
+
+
+def test_commit_summary_lines_apply_display_limits() -> None:
+    """Hide singleton ranges and limit message length and commit count."""
+    assert format_lines([("aaaaaaa", 1, "one")]) == []
+    assert format_lines(
+        [("aaaaaaa", 3, "xxxxx"), ("bbbbbbb", 1, "two")], max_message_chars=3
+    ) == [
+        "aaaaaaa (3 files) xxx",
+        "bbbbbbb (1 files) two",
+    ]
+    commits = [(f"{idx:07x}", idx, f"commit {idx}") for idx in range(5)]
+    expected_lines = [f"{sha} ({count} files) {message}" for sha, count, message in commits]
+    assert format_lines(commits[:3], max_commit_count=3) == expected_lines[:3]
+    assert format_lines(commits, max_commit_count=3) == [
+        expected_lines[0],
+        "... (2 more)",
+        *expected_lines[3:],
     ]
 
 
 @pytest.mark.parametrize(
     ("sort_name", "expected_files"),
     [
+        ("n", ["removed.py", "added.py", "net.py"]),
+        ("a", ["removed.py", "net.py", "added.py"]),
+        ("r", ["net.py", "added.py", "removed.py"]),
     ],
 )
+def test_parse_numstat_rows_sorts_by_requested_metric(
     sort_name: str, expected_files: list[str]
 ) -> None:
     """Sort rows by net, added, or removed lines."""
+    numstat = "5\t0\tnet.py\n8\t4\tadded.py\n0\t6\tremoved.py\n"
     assert sorted_files == expected_files
 
 
@@ -114,9 +201,16 @@ def test_file_kind_detects_code_and_test_files(file_path: str, expected: str) ->
     """Classify code and test file paths."""
 
 
+def test_print_table_formats_and_colors_rows(
     capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """Table output formats signs, colors, empty terms, and totals."""
+    rows = (
+        (2, 3, 1, "src/added.py"),
+        (-1, 0, 1, "tests/removed.py"),
+        (0, 1, 1, "changed.md"),
+    )
     monkeypatch.delenv("FORCE_COLOR", raising=False)
     monkeypatch.setenv("NO_COLOR", "1")
     assert capsys.readouterr().out == (
@@ -131,11 +225,40 @@ def test_file_kind_detects_code_and_test_files(file_path: str, expected: str) ->
     assert capsys.readouterr().out == (
         "     lines  file\n"
     )
+    monkeypatch.delenv("FORCE_COLOR")
+    assert capsys.readouterr().out == "lines  file\n   +2  added.py\n   +2  total\n"
 
 
+def test_html_report_formats_rows_and_omits_total_link(
+    tmp_path: Path,
+    git_path: str,
     capsys: pytest.CaptureFixture[str],
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """HTML report formats added/removed rows and leaves total unlinked."""
+    repo = str(tmp_path)
+    run_git(git_path, repo, ["init"])
+    (tmp_path / "base.txt").write_text("base\n", encoding="utf-8")
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests/removed.py").write_text("old\n", encoding="utf-8")
+    commit_all(git_path, repo, "initial")
+    (tmp_path / "tests/removed.py").write_text("", encoding="utf-8")
+    (tmp_path / "src").mkdir()
+    (tmp_path / "src/added.py").write_text("new\n", encoding="utf-8")
+    monkeypatch.chdir(tmp_path)
+    report_path = capsys.readouterr().out.removeprefix("Opened ").strip()
+    with open(report_path, encoding="utf-8") as report_file:
+        report_html = report_file.read()
+    os.remove(report_path)
+    added_row = next(line for line in report_html.splitlines() if "src/added.py" in line)
+    removed_row = next(line for line in report_html.splitlines() if "tests/removed.py" in line)
+    total_row = next(line for line in report_html.splitlines() if "<code>total</code>" in line)
+    assert '<span class="added">+1</span>' in added_row
+    assert 'class="code-file"' in added_row
+    assert " = " not in added_row
+    assert '<span class="removed">-1</span>' in removed_row
+    assert 'class="test-file"' in removed_row
+    assert "net-negative" not in removed_row
     assert "href=" not in total_row
 
 
@@ -145,6 +268,7 @@ def test_file_kind_detects_code_and_test_files(file_path: str, expected: str) ->
         (
             "local",
             [
+                (0, 1, 1, "unstaged.txt"),
                 (2, 2, 0, "staged.txt"),
                 (2, 2, 0, "untracked.txt"),
             ],
@@ -153,6 +277,7 @@ def test_file_kind_detects_code_and_test_files(file_path: str, expected: str) ->
         ("staged_files", [(2, 2, 0, "staged.txt")]),
         (
             "unstaged",
+            [(0, 1, 1, "unstaged.txt"), (1, 1, 0, "staged.txt"), (2, 2, 0, "untracked.txt")],
         ),
     ],
 )
