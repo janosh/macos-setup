@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+# zsh, not bash: ask_details uses zsh's `read VAR'?prompt'` form below
 
   sudo --stdin --validate <<< "${SUDO_PASSWORD}" 2> /dev/null
 }

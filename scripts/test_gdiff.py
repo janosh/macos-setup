@@ -259,6 +259,7 @@ def test_html_report_formats_rows_and_omits_total_link(
     assert '<span class="removed">-1</span>' in removed_row
     assert 'class="test-file"' in removed_row
     assert "net-negative" not in removed_row
+    assert '<span class="removed">-0</span>' not in report_html
     assert "href=" not in total_row
 
 
