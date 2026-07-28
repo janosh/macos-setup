@@ -1,8 +1,55 @@
 #!/bin/bash
 
+configure_agents() {
+  dev_dir=$(dirname "${DOTFILES_DIR}")
+  agents_md="${DOTFILES_DIR}/agents/AGENTS.md"
+
+  ln -sfn "${agents_md}" "${dev_dir}/AGENTS.md"
+
+  # Cursor does not walk up past the workspace root, so every repo needs its own link.
+  # Repos that ship their own AGENTS.md are left alone.
+  # -e "${repo}.git": worktrees and submodules have a .git file, not a directory.
+  # -L on the target as well: -e alone is false for a dangling link, and ln would fail.
+  for repo in "${dev_dir}"/*/; do
+    if [[ -e "${repo}.git" && ! -e "${repo}AGENTS.md" && ! -L "${repo}AGENTS.md" ]]; then
+      ln -s "${agents_md}" "${repo}AGENTS.md"
+    fi
+  done
+
+    mkdir -p "${dest}"
+    for skill in "${DOTFILES_DIR}"/agents/skills/*/; do
+      skill=${skill%/} # glob leaves a trailing slash, strip it to get the skill name
+      # -n: replace an existing skill symlink instead of linking inside the dir it points to.
+      ln -sfn "${skill}" "${dest}/${skill##*/}"
+    done
+  done
+}
+
+configure_login_items() {
+  # Rectangle/Maccy need login items; SMAppService has no CLI, so System Events
+  # (prompts once for Automation access).
+  local app_name app_path
+  for app_name in Rectangle Maccy; do
+    app_path="/Applications/${app_name}.app"
+    if [[ ! -d "${app_path}" ]]; then
+      echo "- Skipping ${app_name} login item, not installed at ${app_path}."
+      continue
+    fi
+    echo "- Adding ${app_name} to login items."
+    osascript \
+      -e 'tell application "System Events"' \
+      -e "if not (exists login item \"${app_name}\") then" \
+      -e "make login item at end with properties {path:\"${app_path}\", hidden:false}" \
+      -e 'end if' \
+      -e 'end tell' > /dev/null ||
+      echo "  failed: grant Automation access to System Events, then rerun."
+  done
 }
 
   mkdir -p ~/.config/git
+  ln -sf "${DOTFILES_DIR}/dotfiles/git/global-ignore" ~/.config/git/ignore
+  ln -sf "${DOTFILES_DIR}/dotfiles/git/global-attributes" ~/.config/git/attributes
+  ln -sf "${DOTFILES_DIR}/dotfiles/git/config" ~/.gitconfig
 }
 
 set_file_association() {
@@ -14,6 +61,9 @@ configure_macos() {
 
   # Ask for 'sudo' authentication.
   if sudo --non-interactive true 2> /dev/null; then
+    # Plain `read` only: this file is sourced by zsh, whose read has no -n/-p.
+    echo -n "$(tput bold)Some commands require 'sudo', but it seems you have already authenticated. When you’re ready to continue, press ↵.$(tput sgr0)"
+    read -r _
   else
     echo -n "$(tput bold)When you’re ready to continue, insert your password. This is done upfront for the commands that require 'sudo'.$(tput sgr0) "
     sudo --validate
@@ -94,10 +144,17 @@ configure_macos() {
   echo '- Disable the "Are you sure you want to open this application?" dialog.'
   defaults write com.apple.LaunchServices LSQuarantine -bool false
 
+  set_file_association public.html com.brave.Browser
 
   defaults write com.apple.PowerChime ChimeOnNoHardware -bool true
   killall PowerChime
 
 
 
+  pnpm_config="${HOME}/Library/Preferences/pnpm/config.yaml"
+  mkdir -p "$(dirname "${pnpm_config}")"
+  grep -q '^minimumReleaseAge:' "${pnpm_config}" 2> /dev/null ||
+    echo 'minimumReleaseAge: 0' >> "${pnpm_config}"
+
+  "${DOTFILES_DIR}/setup/system-settings.sh"
 }

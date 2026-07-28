@@ -2,11 +2,17 @@
 
 ## Cursor/Codex Setup
 
+`configure_agents` in `setup/3-config.sh` creates all the symlinks below. It runs as part of `setup/main.sh`; re-run it on its own after cloning new repos:
 
 ```sh
+source ~/dev/dotfiles/setup/3-config.sh && DOTFILES_DIR=~/dev/dotfiles configure_agents
 ```
 
+Why each link exists:
 
+- Codex and Claude Code inherit `AGENTS.md` up the directory tree, so a single `~/dev/AGENTS.md` covers every repo below it.
+- Cursor does **not** walk up past the workspace root — it only reads `AGENTS.md` at the root of the open folder and in subdirectories below it. Opening a single repo means `~/dev/AGENTS.md` is one level too high and no rules load at all, so every repo gets its own link. Repos with their own `AGENTS.md` are left alone, and the global gitignore excludes `AGENTS.md` so these stay untracked.
+- Global skills live in `~/.cursor/skills/` for Cursor, `~/.agents/skills/` for Codex and `~/.claude/skills/` for Claude Code. The `SKILL.md` `name`/`description` frontmatter is shared across all three, so the same skill dirs are linked into each.
 
 ## When having lost work in VS Code
 
@@ -32,6 +38,8 @@ ln -f $(which python3) /Users/janosh/.venv/py312/bin/python # update the symlink
 
 the last command brought the venv back to life and used `/opt/homebrew/bin/python3` instead of `/opt/homebrew/Cellar/python@3.12/3.12.3/Frameworks/Python.framework/Versions/3.12/bin/python3.12` which should not break again in future updates.
 perhaps a better solution altogether would be to tell `uv` to copy the Python binary instead of linking it. `uv --link-mode=copy` appears to apply only to packages though.
+
+Fixed for good in `setup/2-apps.sh`: `uv` is installed by its own standalone script (not brew) and `~/.venv/py314` is created with `--managed-python`, so the venv points at uv's own interpreter and brew can no longer invalidate it.
 
 ## iCloud Documents Sync & New Mac Setup
 
@@ -67,3 +75,5 @@ Use `rsync` to merge the unique files from the duplicate folder into the main on
 **Important Setting:**
 Ensure **"Optimize Mac Storage"** is **OFF** (System Settings > Apple ID > iCloud).
 
+- **ON:** macOS randomly offloads files to the cloud, leaving "ghost" files that need internet to open.
+- **OFF:** Keeps a full copy of all files on your local drive (safest for backups and offline work).

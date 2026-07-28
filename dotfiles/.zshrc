@@ -1,5 +1,13 @@
+# Deduplicate PATH: each entry below is prepended once per interactive shell.
+typeset -U PATH path
 
+
+if [[ -x ~/.venv/py314/bin/python ]]; then
+  export VIRTUAL_ENV="$HOME/.venv/py314"
+  export PATH="$VIRTUAL_ENV/bin:$PATH"
+fi
 # shellcheck disable=SC1091
+[[ -f "$HOME"/.local/bin/env ]] && . "$HOME"/.local/bin/env
 
 }
 }

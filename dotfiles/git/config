@@ -12,6 +12,7 @@
 
 [core]
 	attributesfile = ~/.config/git/attributes
+	excludesfile = ~/.config/git/ignore
 
 [rebase]
 	autoStash = true
