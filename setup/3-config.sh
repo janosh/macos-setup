@@ -46,6 +46,10 @@ configure_login_items() {
   done
 }
 
+link_dotfiles() {
+  # -sf: force replace existing file/symlink.
+  ln -sf "${DOTFILES_DIR}/dotfiles/.zshrc" ~/.zshrc
+
   mkdir -p ~/.config/git
   ln -sf "${DOTFILES_DIR}/dotfiles/git/global-ignore" ~/.config/git/ignore
   ln -sf "${DOTFILES_DIR}/dotfiles/git/global-attributes" ~/.config/git/attributes
@@ -54,6 +58,13 @@ configure_login_items() {
 
 set_file_association() {
   defaults write com.apple.LaunchServices/com.apple.launchservices.secure LSHandlers -array-add \
+    "{LSHandlerContentType=${1};LSHandlerRoleAll=${2};}"
+}
+
+# Write the same key to built-in and Bluetooth trackpad domains.
+write_trackpad() {
+  defaults write com.apple.AppleMultitouchTrackpad "$@"
+  defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad "$@"
 }
 
 configure_macos() {
@@ -99,12 +110,36 @@ configure_macos() {
   defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
   echo '- Trackpad: enable tap to click for this user and for the login screen.'
+  write_trackpad Clicking -bool true
   defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
   defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
   echo '- Trackpad: map bottom right corner to right-click.'
+  write_trackpad TrackpadCornerSecondaryClick -int 2
+  write_trackpad TrackpadRightClick -bool true
   defaults -currentHost write NSGlobalDomain com.apple.trackpad.trackpadCornerClickBehavior -int 1
   defaults -currentHost write NSGlobalDomain com.apple.trackpad.enableSecondaryClick -bool true
+
+  echo '- Trackpad: three-finger drag (clears conflicting drag/swipe gestures).'
+  write_trackpad TrackpadThreeFingerDrag -bool true
+  write_trackpad Dragging -bool false
+  write_trackpad DragLock -bool false
+  write_trackpad TrackpadThreeFingerHorizSwipeGesture -int 0
+  write_trackpad TrackpadThreeFingerVertSwipeGesture -int 0
+
+  defaults -currentHost write com.apple.controlcenter Bluetooth -int 18
+  defaults write com.apple.screensaver askForPassword -int 1
+  defaults write com.apple.screensaver askForPasswordDelay -int 0
+
+  echo '- Disable the Guest User account.'
+  sudo sysadminctl -guestAccount off
+
+  echo '- Enable Touch ID for sudo (via update-safe sudo_local, not sudo itself).'
+  # Template ships on Sonoma+; without it (or a prior sudo_local) there is nothing to edit.
+  fi
+  if [[ -f /etc/pam.d/sudo_local ]]; then
+    sudo sed -i '' 's/^#auth/auth/' /etc/pam.d/sudo_local
+  fi
 
   echo '- Set Home as the default location for new Finder windows.'
   defaults write com.apple.finder NewWindowTarget -string 'PfLo'
@@ -122,6 +157,10 @@ configure_macos() {
   echo '- Show path bar at bottom edge of Finder windows.'
   defaults write com.apple.finder ShowPathbar -bool true
 
+  echo '- Finder: open folders in new windows, not tabs.'
+  defaults write com.apple.finder FinderSpawnTab -bool false
+  defaults write com.apple.finder AppleWindowTabbingMode -string manual
+
   echo '- Avoid creating .DS_Store files on network or USB volumes.'
   defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
   defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
@@ -131,7 +170,12 @@ configure_macos() {
   defaults write com.apple.frameworks.diskimages skip-verify-locked -bool true
   defaults write com.apple.frameworks.diskimages skip-verify-remote -bool true
 
+  echo '- Dock: hide recents; keep Spaces in fixed order.'
   defaults write com.apple.dock show-recents -bool false
+  defaults write com.apple.dock mru-spaces -bool false
+
+  echo '- Disable click wallpaper to show desktop (Sonoma+).'
+  defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
 
   echo '- Copy email addresses as foo@bar.com instead of Foo Bar <foo@bar.com> in Mail.app.'
   defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
@@ -139,16 +183,25 @@ configure_macos() {
   echo '- Disable inline mail attachments (just show the icons).'
   defaults write com.apple.mail DisableInlineAttachmentViewing -bool true
 
+  echo '- Screenshots: save to Downloads, no window shadow, no floating thumbnail.'
+  defaults write com.apple.screencapture location -string "${HOME}/Downloads"
   defaults write com.apple.screencapture disable-shadow -bool true
+  defaults write com.apple.screencapture show-thumbnail -bool false
 
   echo '- Disable the "Are you sure you want to open this application?" dialog.'
   defaults write com.apple.LaunchServices LSQuarantine -bool false
 
   set_file_association public.html com.brave.Browser
 
+  echo '- Disable power chime on connecting to power.'
   defaults write com.apple.PowerChime ChimeOnNoHardware -bool true
   killall PowerChime
 
+  # Restart UI agents so defaults take effect (three-finger drag may still need logout).
+  killall Dock Finder ControlCenter 2> /dev/null || true
+
+  echo '- Disable Homebrew analytics.'
+  brew analytics off
 
 
   pnpm_config="${HOME}/Library/Preferences/pnpm/config.yaml"
@@ -156,5 +209,6 @@ configure_macos() {
   grep -q '^minimumReleaseAge:' "${pnpm_config}" 2> /dev/null ||
     echo 'minimumReleaseAge: 0' >> "${pnpm_config}"
 
+  # Run (don't source): system-settings.sh traps SIGINT; sourcing would abort setup on ⌃c.
   "${DOTFILES_DIR}/setup/system-settings.sh"
 }
