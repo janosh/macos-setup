@@ -6,8 +6,11 @@ import argparse
 import glob
 import json
 import os
+import re
 import sys
 from typing import Any
+
+DETAILS_BLOCK_RE = re.compile(r"<details\b[^>]*>.*?</details>", re.DOTALL | re.IGNORECASE)
 
 type JsonValue = dict[str, JsonValue] | list[JsonValue] | str | int | float | bool | None
 
@@ -35,14 +38,20 @@ def parse_args() -> argparse.Namespace:
         default="",
         help="Optional explicit CodeRabbit review ID to extract",
     )
+    parser.add_argument(
+        "--mode",
+        help=(
         ),
     )
     parser.add_argument(
         "--output",
         default="",
+        help="Output file path (omit to print to stdout)",
     )
     parser.add_argument(
+        "--json",
         action="store_true",
+        help="Emit full JSON instead of compact plain text",
     )
     return parser.parse_args()
 
@@ -87,8 +96,30 @@ def parse_iso_datetime(timestamp_text: str) -> datetime | None:
 
 def review_timestamp_epoch(review: dict[str, Any]) -> float:
     """Return best available review timestamp as epoch seconds."""
+    parsed_timestamps = [
+        parsed
+        for key in TIMESTAMP_KEYS
+        if isinstance((value := review.get(key)), str)
+        and (parsed := parse_iso_datetime(value)) is not None
+    ]
+    return max(parsed_timestamps).timestamp() if parsed_timestamps else 0.0
+
+
+def flatten_file_comments(
+    by_file: dict[str, Any],
+    *,
+    comment_type: str | None = None,
+    nested_key: str | None = None,
 ) -> list[dict[str, Any]]:
+    """Flatten per-file comment lists (optionally nested under nested_key)."""
     flattened_comments: list[dict[str, Any]] = []
+    for filename, entry in by_file.items():
+        if nested_key is not None:
+            if not isinstance(entry, dict):
+                continue
+            comments = entry.get(nested_key)
+        else:
+            comments = entry
         if not isinstance(comments, list):
             continue
         for comment in comments:
@@ -96,13 +127,51 @@ def review_timestamp_epoch(review: dict[str, Any]) -> float:
                 continue
             flattened_comments.append(
                 {
+                    "filename": comment.get("filename") or filename,
                     "start_line": comment.get("startLine"),
                     "end_line": comment.get("endLine"),
                     "severity": comment.get("severity"),
+                    "type": comment_type or comment.get("type") or "actionable",
                     "comment": comment.get("comment"),
                 }
             )
     return flattened_comments
+
+
+
+    additional_details = review.get("additionalDetails")
+    if not isinstance(additional_details, dict):
+        additional_details = {}
+        )
+
+
+def format_location(
+    filename: str, start_line: int | str | None, end_line: int | str | None
+) -> str:
+    """Format file path with start/end line numbers for compact display."""
+    if start_line is None:
+        return filename if end_line is None else f"{filename}:{end_line}"
+    if end_line is None or end_line == start_line:
+        return f"{filename}:{start_line}"
+    return f"{filename}:{start_line}-{end_line}"
+
+
+def format_comments_text(
+) -> str:
+    title = review_title.strip() or "(untitled review)"
+    if not comments:
+        return f"{header}\n\n(none)\n"
+
+    blocks: list[str] = []
+    for comment in comments:
+        location = format_location(
+            str(comment["filename"]),
+            comment.get("start_line"),
+            comment.get("end_line"),
+        )
+            location = f"{location} [{severity}]"
+        blocks.append(f"{location}\n{body_text}")
+    return f"{header}\n\n" + "\n\n---\n\n".join(blocks) + "\n"
 
 
 def select_review(cache_files: list[str], review_id: str) -> tuple[dict[str, Any], str, float]:
@@ -136,6 +205,7 @@ def select_review(cache_files: list[str], review_id: str) -> tuple[dict[str, Any
 
 
 def main() -> None:
+    """Extract CodeRabbit comments for selected review and emit text or JSON."""
     args = parse_args()
     workspace = os.path.abspath(args.workspace)
 
@@ -144,7 +214,40 @@ def main() -> None:
         review_id=args.review_id,
     )
 
+
+    review_title = selected_review.get("title")
+    review_title = review_title if isinstance(review_title, str) else ""
+
+    if args.json:
+        payload = json.dumps(
+            {
+                "workspace": workspace,
+                "source_cache_file": source_cache_file,
+                "selected_review_id": selected_review.get("id"),
+                "selected_review_title": review_title,
+                "selected_review_timestamp_epoch": selected_timestamp_epoch,
+                "mode": args.mode,
+                "comment_count": len(extracted_comments),
+                "comments": extracted_comments,
+            },
+            indent=2,
+            ensure_ascii=False,
+        )
+    else:
+        payload = format_comments_text(
+        )
+    if not payload.endswith("\n"):
+        payload += "\n"
+
+    if args.output:
+        output_path = os.path.abspath(args.output)
+        with open(output_path, "w", encoding="utf-8") as file_handle:
+            file_handle.write(payload)
+        print(output_path, file=sys.stderr)
+        print(f"comment_count={len(extracted_comments)}", file=sys.stderr)
+        print(f"source_cache_file={source_cache_file}", file=sys.stderr)
         return
+    print(payload, end="")
 
 
 if __name__ == "__main__":

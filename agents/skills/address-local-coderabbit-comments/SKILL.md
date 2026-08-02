@@ -17,8 +17,10 @@ Use this skill when a user asks for:
 1. Identify the target workspace path (usually current repo).
 
 ```bash
+uv run --no-project "/Users/janosh/dev/dotfiles/agents/skills/address-local-coderabbit-comments/scripts/extract_comments.py" --workspace "/absolute/path/to/repo"
 ```
 
+1. Triage from the printed comments (`file:lines` + body).
 
 
 ## Critical behavior

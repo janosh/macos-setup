@@ -5,24 +5,46 @@
 [github]
 	user = janosh
 
+# === Credentials ===
 [credential]
 	helper = osxkeychain
+# osxkeychain pins one account and ignores `gh auth switch`. Empty helper clears the
+# inherited list; gh then supplies the active token for HTTPS GitHub ops.
+[credential "https://github.com"]
+	helper = !/opt/homebrew/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = !/opt/homebrew/bin/gh auth git-credential
+# Linux alternative:
 # [credential]
 # 	helper = store
 
+# === Core ===
 [core]
+	# Cursor as git editor (interactive rebase, tag annotation, ...)
+	# No default for attributesfile; set explicitly.
 	attributesfile = ~/.config/git/attributes
+	# Same path git defaults to; set explicitly so ignore still works if XDG_CONFIG_HOME changes.
 	excludesfile = ~/.config/git/ignore
 
+[init]
+	defaultBranch = main
+
+# === Rebase / push / pull ===
 [rebase]
+	# Stash before rebase, reapply after. https://git-scm.com/docs/git-config#Documentation/git-config.txt-rebaseautoStash
 	autoStash = true
+	# Move fixup commits to the correct line during interactive rebase.
 	autoSquash = true
 
 [push]
+	# https://stackoverflow.com/a/3745250
 	followTags = true
 	# https://git-scm.com/docs/git-config#Documentation/git-config.txt-pushautoSetupRemote
 	autoSetupRemote = true
+	# `git push -u` by default
+	default = current
 
 [pull]
+	# Fast-forward only; no merge commits. https://stackoverflow.com/a/62653400
 	ff = only
 	rebase = true

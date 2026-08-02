@@ -1,6 +1,10 @@
 # Deduplicate PATH: each entry below is prepended once per interactive shell.
 typeset -U PATH path
 
+# === Options ===
+setopt autocd prompt_subst
+
+# === Prompt (robbyrussell-style) ===
 autoload -U colors && colors
 _git_prompt() {
   git rev-parse --is-inside-work-tree >/dev/null 2>&1 || return
@@ -15,6 +19,7 @@ _git_prompt() {
 }
 PROMPT="%(?:%{$fg_bold[green]%}%1{➜%} :%{$fg_bold[red]%}%1{➜%} ) %{$fg[cyan]%}%c%{$reset_color%} \$(_git_prompt)"
 
+# === Completion ===
 zmodload -i zsh/complist
 WORDCHARS=''
 unsetopt menu_complete flowcontrol
@@ -26,18 +31,59 @@ zstyle ':completion:*' use-cache yes
 zstyle ':completion:*' cache-path "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions"
 zstyle ':completion:*:cd:*' tag-order local-directories directory-stack path-directories
 mkdir -p "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/completions"
+# On fpath before compinit. configure_macos chmods /opt/homebrew/share (compinit insecure-dir warn).
+[[ -d /opt/homebrew/share/zsh-completions ]] && fpath=(/opt/homebrew/share/zsh-completions $fpath)
 autoload -Uz compinit && compinit
 autoload -U +X bashcompinit && bashcompinit
 
+# === Environment ===
+# Shared py314 venv. Check -x on python: brew upgrades can leave a dangling symlink.
 if [[ -x ~/.venv/py314/bin/python ]]; then
   export VIRTUAL_ENV="$HOME/.venv/py314"
   export PATH="$VIRTUAL_ENV/bin:$PATH"
 fi
+export PATH="$HOME/.cargo/bin:$PATH"
+# No uv.lock in repos: refuse lock writes; don't sync a project .venv on `uv run`.
+export UV_FROZEN=1
+export UV_NO_SYNC=1
+export PNPM_CONFIG_LOCKFILE=false
 # shellcheck disable=SC1091
 [[ -f "$HOME"/.local/bin/env ]] && . "$HOME"/.local/bin/env
+[[ -r "$HOME/.vite-plus/env" ]] && . "$HOME/.vite-plus/env" # https://viteplus.dev
 
+# === Plugins (syntax-highlighting last) ===
+# shellcheck disable=SC1091,SC1094
+for _zsh_plugin in zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting; do
+  [[ -r /opt/homebrew/share/$_zsh_plugin/$_zsh_plugin.zsh ]] &&
+    . /opt/homebrew/share/$_zsh_plugin/$_zsh_plugin.zsh
+done
+unset _zsh_plugin
+ZSH_AUTOSUGGEST_CLEAR_WIDGETS+=(bracketed-paste) # https://github.com/zsh-users/zsh-autosuggestions/issues/351
+
+# === Key bindings ===
+bindkey -e # Option as Meta: terminal sequences below (emacs mode already has ^[b/^[f)
+() {
+  local seq
+  for seq in '\e\e[D' '\e\eOD' '^[[1;3D' '^[[1;9D'; do bindkey "$seq" backward-word; done
+  for seq in '\e\e[C' '\e\eOC' '^[[1;3C' '^[[1;9C'; do bindkey "$seq" forward-word; done
 }
+bindkey '^[[3;3~' kill-word
+if (( $+functions[history-substring-search-up] )); then
+  bindkey '^[[A' history-substring-search-up
+  bindkey '^[[B' history-substring-search-down
+  [[ -n $terminfo[kcuu1] ]] && bindkey "$terminfo[kcuu1]" history-substring-search-up
+  [[ -n $terminfo[kcud1] ]] && bindkey "$terminfo[kcud1]" history-substring-search-down
+fi
+
+_dotfiles_dir=${${(%):-%x}:A:h} # :A follows ~/.zshrc symlink
+# shellcheck disable=SC1091
+. "${_dotfiles_dir}/aliases.sh"
+# shellcheck disable=SC1091
+unset _dotfiles_dir
+
+# Rank files by net lines added. --no-project: stdlib script, no cwd project sync/lock.
 }
+
 # Clean stale branches and non-origin remotes.
 # shellcheck disable=SC2086
 grcl() {
