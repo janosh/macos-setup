@@ -25,6 +25,7 @@ if [[ $- == *i* ]]; then # https://superuser.com/a/686293
   bind '"\eOB": history-search-forward'
   bind '"\e\e[D": backward-word'
   bind '"\e\e[C": forward-word'
+  bind '"\C-u": unix-line-discard' # delete to start of line
 fi
 
 _dotfiles_dir="$(dirname "$(realpath "${BASH_SOURCE[0]}")")"

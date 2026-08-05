@@ -2,6 +2,7 @@
 
 # CLIs
 brew "ffmpeg"
+brew "gpac" # provides MP4Box for preserving non-video tracks and metadata
 brew "gh"
 brew "git"
 brew "jq"
