@@ -23,14 +23,19 @@ DEFAULT_QUALITY = 62
 MAX_QUALITY = 100
 DISPLAY_MATRIX_VALUES = 9
 FRAME_RATE_TOLERANCE = 0.01
+_COMMON_COLOR_CODES = {
     "bt709": 1,
     "bt470bg": 5,
     "smpte170m": 6,
     "smpte240m": 7,
+}
+COLOR_PRIMARIES = _COMMON_COLOR_CODES | {
+    "bt470m": 4,
     "bt2020": 9,
     "smpte431": 11,
     "smpte432": 12,
 }
+COLOR_TRANSFERS = _COMMON_COLOR_CODES | {
     "bt470m": 4,
     "iec61966-2-1": 13,
     "bt2020-10": 14,
@@ -38,6 +43,7 @@ FRAME_RATE_TOLERANCE = 0.01
     "smpte2084": 16,
     "arib-std-b67": 18,
 }
+COLOR_MATRICES = _COMMON_COLOR_CODES | {
     "rgb": 0,
     "fcc": 4,
     "bt2020nc": 9,
@@ -55,17 +61,27 @@ def require_tool(name: str) -> str:
     )
 
 
+def run_command(command: Sequence[str], *, capture_output: bool = False) -> str:
+    """Run a command, returning stdout and including captured diagnostics in failures."""
     result = subprocess.run(
         command,
         capture_output=capture_output,
         check=False,
         text=True,
     )
+    if result.returncode:
+        diagnostics = "\n".join(
+            part.strip() for part in (result.stdout, result.stderr) if part
+        )
+        message = f"Command failed ({result.returncode}): {' '.join(command)}"
+        raise RuntimeError(f"{message}\n{diagnostics}" if diagnostics else message)
+    return result.stdout or ""
 
 
 def probe_video(ffprobe: str, file_path: str) -> dict[str, Any]:
     """Return all stream and container metadata reported by FFprobe."""
     return json.loads(
+        run_command(
             [
                 ffprobe,
                 "-v",
@@ -75,6 +91,8 @@ def probe_video(ffprobe: str, file_path: str) -> dict[str, Any]:
                 "-of",
                 "json",
                 file_path,
+            ],
+            capture_output=True,
         )
     )
 
@@ -179,6 +197,7 @@ def encode_video(
     if color_metadata:
         command.extend(("-bsf:v", f"hevc_metadata={':'.join(color_metadata)}"))
     command.append(output_file)
+    run_command(command)
 
 
 def replace_video_track(
@@ -191,12 +210,15 @@ def replace_video_track(
     stream_position: int,
 ) -> None:
     """Replace only the primary video track, retaining every other MP4 box and track."""
+    source_track_id = track_id(source_probe["streams"][stream_position])
     existing_ids = [
+        track_id(stream) for stream in source_probe["streams"] if stream.get("id") is not None
     ]
     temporary_track_id = max(existing_ids, default=0) + 1
     imported_track = (
         f"{encoded_file}#trackID=1:ID={temporary_track_id}:tkidx={stream_position + 1}"
     )
+    run_command(
         [
             mp4box,
             "-add",
@@ -215,6 +237,7 @@ def replace_video_track(
     )
     matrix = display_matrix(source_probe["streams"][stream_position])
     if matrix:
+        run_command(
             [mp4box, "-mx", f"{source_track_id}={matrix}", output_file],
             capture_output=True,
         )
@@ -232,10 +255,13 @@ def copy_macos_metadata(input_file: str, output_file: str) -> None:
     )
 
     if sys.platform == "darwin" and (xattr := shutil.which("xattr")):
+        for name in run_command([xattr, input_file], capture_output=True).splitlines():
             value = (
+                run_command([xattr, "-px", name, input_file], capture_output=True)
                 .replace(" ", "")
                 .replace("\n", "")
             )
+            run_command([xattr, "-wx", name, value, output_file], capture_output=True)
 
     # Extended-attribute tools can update these, so restore access/modify times next.
     os.utime(
@@ -251,6 +277,10 @@ def copy_macos_metadata(input_file: str, output_file: str) -> None:
         and (get_file_info := shutil.which("GetFileInfo"))
         and (set_file := shutil.which("SetFile"))
     ):
+        creation_date = run_command(
+            [get_file_info, "-d", input_file], capture_output=True
+        ).strip()
+        run_command([set_file, "-d", creation_date, output_file], capture_output=True)
 
 
 def stream_signature(stream: dict[str, Any]) -> dict[str, Any]:

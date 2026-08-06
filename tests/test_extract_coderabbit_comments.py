@@ -32,6 +32,7 @@ def test_format_location(
     assert extract_comments.format_location(filename, start_line, end_line) == expected
 
 
+def test_format_comments_text() -> None:
     text = extract_comments.format_comments_text(
         [
             {
@@ -57,6 +58,7 @@ def test_format_location(
 
 
     review = {
+        "fileReviewMap": {"a.py": {"comments": [{"comment": "Fix the bug."}]}},
     }
     )
 

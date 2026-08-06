@@ -169,7 +169,10 @@ def format_comments_text(
             comment.get("start_line"),
             comment.get("end_line"),
         )
+        if (severity := comment.get("severity")) and severity != "none":
             location = f"{location} [{severity}]"
+        body = str(comment.get("comment") or "(empty comment)")
+        body_text = re.sub(r"\n{3,}", "\n\n", DETAILS_BLOCK_RE.sub("", body)).strip()
         blocks.append(f"{location}\n{body_text}")
     return f"{header}\n\n" + "\n\n---\n\n".join(blocks) + "\n"
 
@@ -214,6 +217,13 @@ def main() -> None:
         review_id=args.review_id,
     )
 
+    extracted_comments.sort(
+        key=lambda comment: (
+            str(comment["filename"]),
+            int(comment["start_line"] or 0),
+            int(comment["end_line"] or 0),
+        )
+    )
 
     review_title = selected_review.get("title")
     review_title = review_title if isinstance(review_title, str) else ""

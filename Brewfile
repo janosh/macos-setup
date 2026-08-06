@@ -1,6 +1,9 @@
 # Used by the brew_install() function.
 
 # CLIs
+brew "bat"
+brew "dust"
+brew "fd"
 brew "ffmpeg"
 brew "gpac" # provides MP4Box for preserving non-video tracks and metadata
 brew "gh"
@@ -13,10 +16,12 @@ brew "pngquant"
 brew "pnpm"
 brew "python"
 brew "rename"
+brew "ripgrep"
 brew "rsync"
 brew "shellcheck"
 brew "trash"
 brew "typst"
+brew "zopfli"
 brew "zsh-autosuggestions"
 brew "zsh-completions"
 brew "zsh-history-substring-search"

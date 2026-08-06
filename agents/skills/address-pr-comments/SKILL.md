@@ -15,6 +15,7 @@ description: Triage and resolve PR comments from humans and bots, including code
 1. Determine PR number and fetch comments via `gh` APIs.
 3. Once comments are available, categorize into bugs, suggestions, nitpicks, and questions.
 5. Resolve review threads through GraphQL for comments that are fixed or intentionally accepted as no-change. Do not leave bot comment threads open.
+7. Batch related fixes into coherent commits, then push.
 
 ## Rules
 
