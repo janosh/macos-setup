@@ -15,3 +15,4 @@ Prefer folding via `pytest.mark.parametrize`, `test.each`, `it.each`, table case
 
 Keep the test standalone when it covers distinct behavior, needs different setup, would require awkward branching, weakens failure messages, mixes unrelated assertions, or makes fast tests depend on slow setup.
 
+Preserve every folded case and run the narrowest affected test target once after refactoring.

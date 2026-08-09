@@ -16,6 +16,7 @@ description: Perform full branch review against main and propose high-impact fix
 3. Identify bugs, performance concerns, and code smells.
 4. Rank findings by impact.
 5. Implement confident fixes immediately; collect clarifications if needed.
+6. For genuinely high-stakes branches (security, data loss, public API, or large behavior-changing refactors), run a `cross-model-review` second-opinion pass and action its findings. Skip it for routine or large-but-mechanical branches.
 
 ## Rules
 

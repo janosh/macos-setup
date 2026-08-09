@@ -16,6 +16,7 @@ description: Find and fix related variants of a recently fixed issue across the 
 2. Search for exact and conceptual variants across the repo.
 4. Apply fixes consistently.
 5. If repeated 3+ times, consider shared abstraction only when it improves clarity.
+6. Run one aggregated focused verification after all fixes.
 
 ## Rules
 

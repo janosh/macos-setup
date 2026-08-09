@@ -32,6 +32,7 @@ Make the output prompt self-contained, specific, and actionable. Do not hide ris
 
 Launch reviewers on the Step 2 model in read-only mode. Each returns, for its scope, a prioritized list of correctness bugs, test gaps, performance issues, and bloat/overengineering/elegance improvements (including refactor proposals) — each with a concrete fix — plus a plan-completion verdict if a plan exists.
 
+- Use one subagent by default. Partition by feature/directory only when each slice needs deep independent review, shares little cross-cutting context, and serial review clearly costs more than dispatch and aggregation. Use one parallel layer, give each reviewer the shared context plus its slice, then aggregate findings and judge cross-cutting concerns yourself.
 
 Do not let a reviewer's praise substitute for evidence — weight concrete findings over verdicts.
 

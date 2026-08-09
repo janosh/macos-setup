@@ -4,6 +4,10 @@ configure_agents() {
   dev_dir=$(dirname "${DOTFILES_DIR}")
   agents_md="${DOTFILES_DIR}/agents/AGENTS.md"
 
+  # Codex reads global guidance from ~/.codex, while Claude Code inherits AGENTS.md
+  # up the directory tree.
+  mkdir -p ~/.codex
+  ln -sfn "${agents_md}" ~/.codex/AGENTS.md
   ln -sfn "${agents_md}" "${dev_dir}/AGENTS.md"
 
   # Cursor does not walk up past the workspace root, so every repo needs its own link.
@@ -17,7 +21,11 @@ configure_agents() {
   done
 
   # Cursor discovers repo skills at .cursor/skills; keep the source in agents/skills.
+  mkdir -p "${DOTFILES_DIR}/.cursor"
 
+  # All agents share the SKILL.md format. Link every skill into each global directory
+  # so newly added skills are installed automatically when setup runs.
+  for dest in ~/.agents/skills ~/.claude/skills ~/.codex/skills ~/.cursor/skills; do
     mkdir -p "${dest}"
     for skill in "${DOTFILES_DIR}"/agents/skills/*/; do
       skill=${skill%/} # glob leaves a trailing slash, strip it to get the skill name
@@ -49,6 +57,7 @@ configure_login_items() {
 }
 
 link_dotfiles() {
+  local ssh_config_tmp
   # -sf: force replace existing file/symlink.
   ln -sf "${DOTFILES_DIR}/dotfiles/.zshrc" ~/.zshrc
 
@@ -56,6 +65,15 @@ link_dotfiles() {
   ln -sf "${DOTFILES_DIR}/dotfiles/git/global-ignore" ~/.config/git/ignore
   ln -sf "${DOTFILES_DIR}/dotfiles/git/global-attributes" ~/.config/git/attributes
   ln -sf "${DOTFILES_DIR}/dotfiles/git/config" ~/.gitconfig
+
+  mkdir -p ~/.ssh/config.d
+  ln -sf "${DOTFILES_DIR}/dotfiles/ssh/github.conf" ~/.ssh/config.d/github.conf
+  touch ~/.ssh/config
+  ssh_config_tmp=$(mktemp)
+  awk 'BEGIN { print "Include ~/.ssh/config.d/*" } $0 != "Include ~/.ssh/config.d/*" { print }' \
+    ~/.ssh/config > "${ssh_config_tmp}"
+  mv "${ssh_config_tmp}" ~/.ssh/config
+  chmod 600 ~/.ssh/config
 }
 
 set_file_association() {
