@@ -22,6 +22,7 @@ description: Refactor tests to be clearer and more concise while preserving cove
 
 ## Scope handling
 
+- Use `distribute` when requested or when file-disjoint partitions with no shared edited fixtures or helpers justify one layer; otherwise work directly. The parent owns shared changes and aggregate verification. Explain any requested fallback.
 
 ## Rules
 
