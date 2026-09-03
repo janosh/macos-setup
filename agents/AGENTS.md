@@ -52,9 +52,11 @@ Multiple agents may work on the same branch concurrently. Editing a file that al
 - Destructure props: `const { name, age } = user` over `user.name, user.age` repeatedly
 - Don't split components on line count alone—core ones run past 2000 lines by design. Only offer an extraction when a file has clearly separable responsibilities.
 - Prefer `format_num` from `matterviz` over `.toFixed()` for number formatting (handles SI prefixes, trailing zeros)
+- Use `SvelteSet`/`SvelteMap` only where the collection is UI state that templates or effects must react to; plain `Set`/`Map` for constant lookup tables, function-local scratch and non-reactive bookkeeping (timers, caches)
 
 ## Git & GitHub CLI
 
+- Git editor is `code --wait`, so interactive commands hang. Override it with a `sed` script instead, e.g. `GIT_EDITOR="sed -i '' 's/pick/squash/2'" git rebase -i HEAD~n`.
 - If `gh` commands fail with auth errors (e.g. "Unauthorized"), try switching accounts: `gh auth switch` (don't ask permission for this, just do)
 - Don't commit without being asked
 - Never add `Co-authored-by: Cursor/Codex/...` or similar to commit messages

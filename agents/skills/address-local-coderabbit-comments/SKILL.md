@@ -9,12 +9,14 @@ description: Extract CodeRabbit comments for the most recent review round in the
 
 Use this skill when a user asks for:
 
+- current CodeRabbit review comments for the active repo
 - triaging or addressing the latest CodeRabbit feedback
 - the current review round status, not historical rounds
 
 ## Quick workflow
 
 1. Identify the target workspace path (usually current repo).
+1. Run the helper. One call returns the whole round, main comments first:
 
 ```bash
 uv run --no-project "/Users/janosh/dev/dotfiles/agents/skills/address-local-coderabbit-comments/scripts/extract_comments.py" --workspace "/absolute/path/to/repo"
@@ -22,9 +24,14 @@ uv run --no-project "/Users/janosh/dev/dotfiles/agents/skills/address-local-code
 
 1. Triage from the printed comments (`file:lines` + body).
 
+`--mode main` or `--mode nitpicks` narrows the output; `--json` dumps the full cache-shaped payload (keeps `<details>` bodies).
 
 ## Critical behavior
 
+- The default reads every bucket, so an empty result means an empty round. Never re-run with a narrower `--mode` to confirm there is no work.
+- Always use the latest review round for the workspace; never fall back to older rounds.
+- Caches are per editor and per workspace, and go stale silently. The script searches every VS Code-family editor it finds (Cursor, Code, Insiders, VSCodium, Windsurf, Positron) and picks the newest round across all of them; `--ide-user-dir` overrides and is repeatable.
+- The header carries the round's date. If it is not roughly today and the user expected fresh findings, say so with that date instead of reporting the round as current: their editor may be writing to a cache this machine has not synced.
 
 ## Review style guardrails
 

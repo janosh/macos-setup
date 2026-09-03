@@ -10,6 +10,11 @@ import pytest
     [
         ("dotfiles/.zshrc", "HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1"),
         ("dotfiles/.bashrc", "HISTCONTROL=ignoreboth:erasedups"),
+        # Full loop line, not a bare path: prose elsewhere in the file matches a substring.
+        (
+            "setup/3-config.sh",
+            "for dest in ~/.agents/skills ~/.claude/skills ~/.codex/skills ~/.cursor/skills",
+        ),
         ("setup/3-config.sh", "AppleInterfaceStyleSwitchesAutomatically -bool true"),
         ("setup/3-config.sh", "NSAutomaticDashSubstitutionEnabled -bool false"),
         ("setup/3-config.sh", "KeyRepeat -int 2"),

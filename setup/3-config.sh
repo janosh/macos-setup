@@ -1,6 +1,7 @@
 #!/bin/bash
 
 configure_agents() {
+  local dev_dir agents_md repo dest skill
   dev_dir=$(dirname "${DOTFILES_DIR}")
   agents_md="${DOTFILES_DIR}/agents/AGENTS.md"
 
@@ -21,7 +22,10 @@ configure_agents() {
   done
 
   # Cursor discovers repo skills at .cursor/skills; keep the source in agents/skills.
+  # Claude Code needs no project link: personal scope wins over project scope, and
+  # ~/.claude/skills below already points at the same dirs.
   mkdir -p "${DOTFILES_DIR}/.cursor"
+  ln -sfn "../agents/skills" "${DOTFILES_DIR}/.cursor/skills"
 
   # All agents share the SKILL.md format. Link every skill into each global directory
   # so newly added skills are installed automatically when setup runs.

@@ -23,6 +23,7 @@
 # === Core ===
 [core]
 	# Cursor as git editor (interactive rebase, tag annotation, ...)
+	editor = code --wait
 	# No default for attributesfile; set explicitly.
 	attributesfile = ~/.config/git/attributes
 	# Same path git defaults to; set explicitly so ignore still works if XDG_CONFIG_HOME changes.

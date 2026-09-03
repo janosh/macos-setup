@@ -8,18 +8,53 @@ import json
 import os
 import re
 import sys
+from collections import Counter
+from datetime import UTC, datetime
 from typing import Any
+from urllib.parse import unquote
 
 DETAILS_BLOCK_RE = re.compile(r"<details\b[^>]*>.*?</details>", re.DOTALL | re.IGNORECASE)
 
 type JsonValue = dict[str, JsonValue] | list[JsonValue] | str | int | float | bool | None
 
+NITPICK_CACHE_KEYS = {
     "assertive": "assertiveComments",
     "additional": "additionalComments",
     "outsideDiffRange": "outsideDiffRangeComments",
     "duplicate": "duplicateComments",
 }
 TIMESTAMP_KEYS = ("endedAt", "updatedAt", "startedAt", "createdAt")
+# A repo open in two editors has two independently-stale caches; newest round wins.
+IDE_DIR_NAMES = (
+    "Cursor",
+    "Code",
+    "Code - Insiders",
+    "VSCodium",
+    "Windsurf",
+    "Positron",
+)
+
+
+def default_ide_user_dirs() -> list[str]:
+    """Return every known editor user directory present on this machine."""
+    home = os.path.expanduser("~")
+    bases = (
+        f"{home}/Library/Application Support",  # macOS
+        f"{home}/.config",  # Linux
+        os.environ.get("APPDATA", ""),  # Windows
+    )
+    return [
+        candidate
+        for base in bases
+        if base
+        for name in IDE_DIR_NAMES
+        if os.path.isdir(candidate := f"{base}/{name}/User")
+    ]
+
+
+def local_time(epoch: float) -> datetime:
+    """Convert an epoch timestamp to an aware datetime in the local timezone."""
+    return datetime.fromtimestamp(epoch, tz=UTC).astimezone()
 
 
 def parse_args() -> argparse.Namespace:
@@ -31,7 +66,15 @@ def parse_args() -> argparse.Namespace:
         help="Absolute workspace path, e.g. /Users/janosh/dev/matterviz",
     )
     parser.add_argument(
+        "--ide-user-dir",
         "--cursor-user-dir",
+        dest="ide_user_dirs",
+        action="append",
+        default=None,
+        help=(
+            "Editor user directory containing workspaceStorage. Repeatable; "
+            "defaults to every known VS Code-family editor found on this machine"
+        ),
     )
     parser.add_argument(
         "--review-id",
@@ -40,7 +83,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--mode",
+        choices=("all", "main", "nitpicks"),
+        default="all",
         help=(
+            "Filter the round's comments: all (default), main "
+            "(fileReviewMap actionable) or nitpicks (additionalDetails buckets)"
         ),
     )
     parser.add_argument(
@@ -71,9 +118,38 @@ def iter_reviews(payload: JsonValue) -> list[dict[str, Any]]:
     return []
 
 
+def discover_workspace_dirs(ide_user_dirs: list[str], workspace: str) -> list[str]:
+    """Return workspaceStorage directories mapped to the workspace path.
+
+    One repo can appear under several editors, so every match is returned rather
+    than the first: the caller reads them all and lets the newest review win.
+    """
     workspace_uri = f"file://{workspace}"
+    matched_dirs: list[str] = []
+    for ide_user_dir in ide_user_dirs:
+        for workspace_json_path in glob.glob(
+            f"{ide_user_dir}/workspaceStorage/*/workspace.json"
+        ):
+            try:
+                workspace_json = read_json_file(workspace_json_path)
+            except (OSError, json.JSONDecodeError):
+                continue
+            if not isinstance(workspace_json, dict):
+                continue
+            folder = workspace_json.get("folder")
+            # Editors percent-encode the stored folder URI, so a workspace path
+            # containing spaces never equals a raw f"file://{workspace}". Decode the
+            # stored value rather than encoding the input, which would also have to
+            # reproduce the editor's exact choice of reserved characters.
+            if not isinstance(folder, str) or unquote(folder) != workspace_uri:
+                continue
+            matched_dirs.append(os.path.dirname(workspace_json_path))
+    return sorted(set(matched_dirs))
 
 
+def discover_coderabbit_cache_files(workspace_dir: str) -> list[str]:
+    """Return candidate CodeRabbit cache files for one workspaceStorage directory."""
+    cache_glob = f"{workspace_dir}/coderabbit.coderabbit-vscode/*.json"
     return sorted(
         file_path
         for file_path in glob.glob(cache_glob)
@@ -138,11 +214,40 @@ def flatten_file_comments(
     return flattened_comments
 
 
+def extract_all_comments(review: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return every comment in one round, main actionable ones first.
 
+    A caller that has to pick a bucket before seeing anything will eventually pick
+    the empty one and report no work, so extraction is never partial: `--mode`
+    filters this list instead of deciding which half to read.
+    """
+    file_review_map = review.get("fileReviewMap")
+    comments = flatten_file_comments(
+        file_review_map if isinstance(file_review_map, dict) else {},
+        comment_type="main",
+        nested_key="comments",
+    )
     additional_details = review.get("additionalDetails")
     if not isinstance(additional_details, dict):
         additional_details = {}
+    for comment_type, cache_key in NITPICK_CACHE_KEYS.items():
+        comments_by_file = additional_details.get(cache_key)
+        comments.extend(
+            flatten_file_comments(
+                comments_by_file if isinstance(comments_by_file, dict) else {},
+                comment_type=comment_type,
+            )
         )
+    return comments
+
+
+def filter_by_mode(comments: list[dict[str, Any]], mode: str) -> list[dict[str, Any]]:
+    """Narrow extracted comments to main only, nitpicks only, or everything."""
+    if mode == "main":
+        return [comment for comment in comments if comment["type"] == "main"]
+    if mode == "nitpicks":
+        return [comment for comment in comments if comment["type"] != "main"]
+    return comments
 
 
 def format_location(
@@ -157,8 +262,20 @@ def format_location(
 
 
 def format_comments_text(
+    comments: list[dict[str, Any]], *, review_title: str, review_date: str
 ) -> str:
+    """Render comments as compact plain text for agent context.
+
+    The round's date is in the header because these caches go stale silently: a
+    reader who cannot see the date reads months-old comments as current.
+    """
     title = review_title.strip() or "(untitled review)"
+    dated = f" · reviewed {review_date}" if review_date else ""
+    counts = Counter(str(comment["type"]) for comment in comments)
+    breakdown = ", ".join(f"{count} {name}" for name, count in counts.most_common())
+    header = f"# {len(comments)} comment(s)"
+    header += f" ({breakdown})" if breakdown else ""
+    header += f" · {title}{dated}"
     if not comments:
         return f"{header}\n\n(none)\n"
 
@@ -175,6 +292,33 @@ def format_comments_text(
         body_text = re.sub(r"\n{3,}", "\n\n", DETAILS_BLOCK_RE.sub("", body)).strip()
         blocks.append(f"{location}\n{body_text}")
     return f"{header}\n\n" + "\n\n---\n\n".join(blocks) + "\n"
+
+
+def collect_cache_files(ide_user_dirs: list[str] | None, workspace: str) -> list[str]:
+    """Return every CodeRabbit cache file for one workspace across all editors.
+
+    Raises RuntimeError naming what was searched, so an empty result is never
+    mistaken for "this workspace has no review comments".
+    """
+    ide_user_dirs = ide_user_dirs or default_ide_user_dirs()
+    if not ide_user_dirs:
+        raise RuntimeError(
+            "No VS Code-family editor user directory found; pass --ide-user-dir."
+        )
+    workspace_dirs = discover_workspace_dirs(ide_user_dirs, workspace)
+    if not workspace_dirs:
+        raise RuntimeError(
+            f"No workspaceStorage folder matched workspace {workspace} "
+            f"under: {', '.join(ide_user_dirs)}"
+        )
+    cache_files = [
+        cache_file
+        for workspace_dir in workspace_dirs
+        for cache_file in discover_coderabbit_cache_files(workspace_dir)
+    ]
+    if not cache_files:
+        raise RuntimeError(f"No CodeRabbit cache files under: {', '.join(workspace_dirs)}")
+    return cache_files
 
 
 def select_review(cache_files: list[str], review_id: str) -> tuple[dict[str, Any], str, float]:
@@ -211,14 +355,18 @@ def main() -> None:
     """Extract CodeRabbit comments for selected review and emit text or JSON."""
     args = parse_args()
     workspace = os.path.abspath(args.workspace)
+    cache_files = collect_cache_files(args.ide_user_dirs, workspace)
 
     selected_review, source_cache_file, selected_timestamp_epoch = select_review(
         cache_files=cache_files,
         review_id=args.review_id,
     )
 
+    extracted_comments = filter_by_mode(extract_all_comments(selected_review), args.mode)
+    # Main comments first: they are the ones that block, nitpicks are advisory.
     extracted_comments.sort(
         key=lambda comment: (
+            comment["type"] != "main",
             str(comment["filename"]),
             int(comment["start_line"] or 0),
             int(comment["end_line"] or 0),
@@ -227,16 +375,30 @@ def main() -> None:
 
     review_title = selected_review.get("title")
     review_title = review_title if isinstance(review_title, str) else ""
+    review_date = (
+        local_time(selected_timestamp_epoch).strftime("%Y-%m-%d")
+        if selected_timestamp_epoch
+        else ""
+    )
+    cache_mtime_iso = local_time(os.path.getmtime(source_cache_file)).isoformat(
+        timespec="minutes"
+    )
 
     if args.json:
         payload = json.dumps(
             {
                 "workspace": workspace,
+                "cache_files": cache_files,
                 "source_cache_file": source_cache_file,
                 "selected_review_id": selected_review.get("id"),
                 "selected_review_title": review_title,
                 "selected_review_timestamp_epoch": selected_timestamp_epoch,
+                "selected_review_date": review_date,
+                "source_cache_file_mtime_iso": cache_mtime_iso,
                 "mode": args.mode,
+                "counts_by_type": dict(
+                    Counter(str(comment["type"]) for comment in extracted_comments)
+                ),
                 "comment_count": len(extracted_comments),
                 "comments": extracted_comments,
             },
@@ -245,6 +407,9 @@ def main() -> None:
         )
     else:
         payload = format_comments_text(
+            extracted_comments,
+            review_title=review_title,
+            review_date=review_date,
         )
     if not payload.endswith("\n"):
         payload += "\n"

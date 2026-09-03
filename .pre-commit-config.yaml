@@ -2,7 +2,7 @@ default_install_hook_types: [pre-commit, commit-msg]
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.2
+    rev: v0.16.5
     hooks:
       - id: ruff-check
         args: [--fix]
@@ -11,7 +11,7 @@ repos:
         types_or: [python, jupyter]
 
   - repo: https://github.com/astral-sh/ty-pre-commit
-    rev: v0.0.69
+    rev: v0.0.78
     hooks:
       - id: ty
         # uvx installs ty + --with deps into one tool env (no uv.lock / .venv).
@@ -24,7 +24,7 @@ repos:
         always_run: false
 
   - repo: https://github.com/shellcheck-py/shellcheck-py
-    rev: v0.11.0.1
+    rev: v0.11.0.1-1
     hooks:
       - id: shellcheck
         # docs: https://github.com/koalaman/shellcheck/wiki
@@ -61,7 +61,7 @@ repos:
         args: [--check-filenames, --ignore-words-list=atomate]
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.49.0
+    rev: v1.50.1
     hooks:
       - id: typos
         types: [text]

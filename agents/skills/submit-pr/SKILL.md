@@ -23,6 +23,8 @@ disable-model-invocation: true
    - preferably shorter when clarity is preserved
 3. Review local changes and organize semantic commits in dependency order.
 4. Derive PR metadata from the full diff, not the branch name or latest commit.
+   - Title: one line, ~70 characters, so it does not wrap in the GitHub PR UI. Name the primary change; put the rest of the inventory in the body. Do not catalog subsystems, datasets, or follow-on fixes in the title.
+   - For large multi-purpose PRs, still pick 1-2 concrete primary changes rather than a vague umbrella description.
    - Use literal, implementation-specific language. Never use vague LLM packaging such as “harden,” “strengthen,” “improve,” “enhance,” “streamline,” “robust,” or “load-bearing.” Prefer “Initialize background tabs, protect dirty buffers, and bound shared dashboard plots” over “Harden background tab and dashboard safety.”
    - Describe every material change as a concise component/mechanism/effect bullet. Include impact, breaking changes, and migration only when applicable; omit empty boilerplate.
    - Never include `Test plan` or `Verification` sections; CI already exposes the authoritative check state.

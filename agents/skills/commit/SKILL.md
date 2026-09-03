@@ -10,6 +10,8 @@ disable-model-invocation: true
 
 Stage **all** edits → commit with hooks → push. Coherent commits; short imperative summary + body focused on rationale.
 
+`/commit` unless followed by `local` authorizes to push to the branch's existing upstream. Don't stop to ask, and don't fall back to a "never push unasked" rule; this skill is the ask. Only `local` skips it.
+
 ## Modifiers
 
 Space-separated after `/commit`; combine freely.

@@ -1,5 +1,6 @@
 ---
 name: cross-model-review
+description: "Run a different-model adversarial review of code/changes — correctness, tests, performance, conciseness — and action verified findings. Modifier: same-model (review with your own family)."
 ---
 
 # Cross-Model Review
@@ -22,10 +23,15 @@ Explicitly task the reviewer with hunting for bloat, overengineering, slop, and 
 
 Make the output prompt self-contained, specific, and actionable. Do not hide risks to make the first agent's work look better.
 
+## Step 2: Pick the reviewer model
 
+A different model family catches different bugs, so by default the reviewer must NOT share your family.
+
+With `same-model`, drop only that requirement: pick the strongest fast model in your own family (say which in your report).
 
 - Identify your own model family (e.g. OpenAI GPT, Anthropic Claude/Opus, Google Gemini).
 - Pick the strongest model from a *different* family, chosen from the model list the current harness actually exposes (e.g. Cursor's subagent model slugs). Prefer the newest available version; never invent or hardcode version names.
+- Prefer fast models. Avoid extra-high reasoning variants such as Fable 5 xhigh; too slow for this review loop. Prefer medium effort or at most high in tricky cases.
 - Rough mapping: if you're GPT, review with the latest Opus/Claude; if you're Claude/Opus, review with the latest GPT. If the harness exposes no model override, or no different-family model is available, omit the override and note the review is same-family (or that cross-family dispatch is unavailable).
 
 ## Step 3: Dispatch the reviewer subagent(s)
